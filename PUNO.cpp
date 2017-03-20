@@ -22,7 +22,18 @@ int main () { //Leer Proveedores
 				
 			if (c != ';')
 		    	{
-		    	l = l + c;
+		    	if (c == '\n')
+		    		{
+		    		tel_p = l;
+		    		cont++;	
+					l = "";
+					
+					}
+				else
+					{
+					l = l + c;
+					}
+		    	
 				//std::cout << l << endl;
 				}
 			else
@@ -50,7 +61,7 @@ int main () { //Leer Proveedores
 			{
 			
 			//LLAMAR A LA FUNCION PARA CREAR EL PROVEEDOR//
-	
+			l = c;
 			std::cout << cod_p << endl;
 			cout << nom_p << endl;
 			cout << dir_p << endl;
@@ -62,12 +73,16 @@ int main () { //Leer Proveedores
   			tel_p = "";
   			
   			cont = 1;
+  			
 			}
 		
 		}
 
   	is.close();                // close file
-
+	std::cout << cod_p << endl;
+			cout << nom_p << endl;
+			cout << dir_p << endl;
+			cout << tel_p << endl;
 	return 0;
 }
 
