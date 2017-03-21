@@ -25,7 +25,11 @@ class Proveedor{
 			Telefono = _tel;			
 			}
 		
-		int getCodigo();
+		int getCodigo(){
+			cout<<"Este es el codiguito: ";
+			cout<<Codigo<<endl;
+			return Codigo;
+		}
 		string getNombre();
 		string getDireccion();
 		int getTelefono();
@@ -43,7 +47,12 @@ class Proveedor{
 class Categoria{
 	
 	public:
-		
+		Categoria()
+			{
+			Codigo = 0;
+			Descripcion = "Nulo";			
+			}
+			
 		Categoria(int _code, string _descripcion)
 			{
 			Codigo = _code;
@@ -77,7 +86,9 @@ class Producto{
 
 
 //////////////LISTA CIRCULAR DOBLE//////////////
+
 class nodo {
+	typedef nodo *pnodo;
    public:
    	
    		//Constructor int
@@ -97,14 +108,14 @@ class nodo {
 		
 		
 		//Constructor Proveedor
-		nodo(Proveedor v)
+		nodo(Proveedor *v)
 			{
 	    	valorP = v;
 	    	siguiente = NULL;
 	    	anterior =NULL;
 	    	}
 		
-	   nodo(Proveedor v, nodo * signodo)
+	   nodo(Proveedor* v, nodo * signodo)
 	    {
 	    	
 	       valorP = v;
@@ -113,18 +124,37 @@ class nodo {
 		//Fin Constructor Proveedor
 		
 		
+		//Constructor Categoria
+		nodo(Categoria* v)
+			{
+	    	valorC = v;
+	    	siguiente = NULL;
+	    	anterior =NULL;
+	    	}
+		
+	   nodo(Categoria* v, nodo * signodo)
+	    {
+	    	
+	       valorC = v;
+	       siguiente = signodo;
+	    }
+		//Fin Constructor pnodo
+		
 		
  private:
     int valor;
-    Proveedor valorP;
+    Proveedor* valorP;
+    Categoria* valorC;
     nodo *siguiente;
     nodo *anterior;
+    
+    
     
         
    friend class listaDC;
 };
-typedef nodo *pnodo;
 
+typedef nodo *pnodo;
 class listaDC {
    public:
     listaDC() { primero = actual = NULL; }
@@ -149,7 +179,10 @@ class listaDC {
     int largoLista();
     
     int LeerProveedores();
-    void InsertarInicio(Proveedor v);
+    void InsertarInicio(Proveedor* v);
+    //void InsertarInicio(pnodo v);
+    int LeerCategorias();
+    void InsertarInicio(Categoria* v);
     
    private:
     pnodo primero;
@@ -208,7 +241,33 @@ void listaDC::InsertarInicio(int v)
 
 
 //Insertar para Proveedor
-void listaDC::InsertarInicio(Proveedor v)
+void listaDC::InsertarInicio(Proveedor* v)
+{
+  
+   if (ListaVacia())
+   {
+     primero = new nodo(v);
+     primero->anterior=primero;
+     primero->siguiente=primero;
+     cout<<"PBA UNO"<<endl;
+   }  
+   else
+   {
+     pnodo nuevo=new nodo (v);
+     nuevo->siguiente=primero;
+     nuevo->anterior= primero->anterior;
+     primero->anterior->siguiente=nuevo;
+     nuevo->siguiente->anterior=nuevo;
+     primero= nuevo;
+     cout<<"PBA DOS"<<endl;
+   }
+}
+//Fin Insertar para Proveedor
+
+
+
+//Insertar para Categoria
+void listaDC::InsertarInicio(Categoria* v)
 {
   
    if (ListaVacia())
@@ -227,8 +286,7 @@ void listaDC::InsertarInicio(Proveedor v)
      primero= nuevo;
    }
 }
-//Fin Insertar para Proveedor
-
+//Fin Insertar para Categoria
 
 
 void listaDC::InsertarFinal(int v)
@@ -369,11 +427,11 @@ void listaDC::Mostrar()
    pnodo aux=primero;
    while(aux->siguiente!=primero)
      {
-                                
-      cout << aux->valor << "-> ";
+                  
+      cout << aux->valorP << "-> ";
       aux = aux->siguiente;
      }
-     cout<<aux->valor<<"->";
+     cout<<aux->valorP<<"->";
      cout<<endl;
 }   
 //////////////END LISTA CIRCULAR DOBLE//////////////
@@ -381,12 +439,7 @@ void listaDC::Mostrar()
 
 
 
-
-
-
-
-
-listaDC:: LeerProveedores() { //Leer Proveedores
+int listaDC:: LeerProveedores() { //Leer Proveedores
   	string cod_p;
   	string nom_p;
   	string dir_p;
@@ -444,15 +497,14 @@ listaDC:: LeerProveedores() { //Leer Proveedores
 			
 			//LLAMAR A LA FUNCION PARA CREAR EL PROVEEDOR//
 			
-		int int_num = std::stoi(tel_p);
-		int int_cod = std::stoi(cod_p);
+			int int_num = std::stoi(tel_p);
+			int int_cod = std::stoi(cod_p);
+				
+			Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
+
+			InsertarInicio(o);
+			delete o;
 			
-		//Proveedor o = Proveedor(int_cod, nom_p, dir_p, int_num);
-		//Proveedor o;
-		// = Proveedor(5454, nom_p, dir_p, 898989);
-		
-		//InsertarInicio(Proveedor(int_cod, nom_p, dir_p, int_num));
-		
 			l = c;
 			std::cout << cod_p << endl;
 			cout << nom_p << endl;
@@ -471,23 +523,129 @@ listaDC:: LeerProveedores() { //Leer Proveedores
 		}
 
   	is.close();                // close file
+  	tel_p = l;
+  	int int_num = std::stoi(tel_p);
+	int int_cod = std::stoi(cod_p);
+  	Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
+		
+	InsertarInicio(o);
+	delete o;
+	
 	std::cout << cod_p << endl;
-			cout << nom_p << endl;
-			cout << dir_p << endl;
-			cout << tel_p << endl;
+	cout << nom_p << endl;
+	cout << dir_p << endl;
+	cout << tel_p << endl;
 	
-	
+	//Mostrar();
 	return 0;
 }
+
+int listaDC:: LeerCategorias() { //Leer Proveedores
+
+	string cod_c;
+	string des_c;
+  	int cont = 1;
+
+	std::ifstream is("Categorías.txt");     // open file
+	
+	char c;
+	string l;
+	while (is.get(c))          // loop getting single characters
+		{
+		if (cont <= 2 )
+			{
+				
+			if (c != ';')
+		    	{
+		    	if (c == '\n')
+		    		{
+		    		des_c = l;
+		    		cont++;	
+					l = "";
+					
+					}
+				else
+					{
+					l = l + c;
+					}
+		    	
+				//std::cout << l << endl;
+				}
+			else
+				{
+				switch (cont)
+					{
+					case 1: cod_c = l;
+					break;
+					
+					case 2: des_c = l;
+					break;
+					}
+				cont++;	
+				l = "";
+				}
+			}
+		else
+			{
+			
+			//LLAMAR A LA FUNCION PARA CREAR EL PROVEEDOR//
+			
+			int int_cod = std::stoi(cod_c);
+				
+			Categoria * o = new Categoria(int_cod, des_c);
+
+			InsertarInicio(o);
+			delete o;
+			
+			l = c;
+			std::cout << cod_c << endl;
+			cout << des_c << endl;
+
+			
+			cod_c = "";
+  			des_c = "";
+
+  			
+  			cont = 1;
+  			
+			}
+		
+		}
+
+  	is.close();                // close file
+  	des_c = l;
+  	int int_cod = std::stoi(cod_c);
+  	
+
+  	Categoria * o = new Categoria(int_cod, des_c);
+		
+	InsertarInicio(o);
+	delete o;
+	
+	std::cout << cod_c << endl;
+	cout << des_c << endl;
+
+	
+	//Mostrar();
+	return 0;
+}
+
+
+
+
+
+
 
 int main()
 	{
 	listaDC ListaProveedores;
 	//Proveedor o;
 	//ListaProveedores.InsertarInicio(o);
+	listaDC ListaCategorias;
 	
+	//ListaProveedores.LeerProveedores();
+	ListaCategorias.LeerCategorias();
 	
-	ListaProveedores.LeerProveedores();
 	return 0;
 	
 	}
