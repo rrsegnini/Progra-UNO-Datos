@@ -833,6 +833,7 @@ int listaDC:: LeerCategorias() { //Leer Categorías
 
 int listaDC:: LeerProductos() { //Leer Productos
 	
+	cout<<"Productos: "<<endl;
 	
 	string CodProducto;
 	string CodCategoria;
@@ -842,7 +843,7 @@ int listaDC:: LeerProductos() { //Leer Productos
 
   	int cont = 1;
 
-	std::ifstream is("Categorías.txt");     // open file
+	std::ifstream is("Productos.txt");     // open file
 	
 	char c;
 	string l;
@@ -896,7 +897,13 @@ int listaDC:: LeerProductos() { //Leer Productos
 			int int_cat = std::stoi(CodCategoria);
 			float int_precio = std::stoi(PrecioUnit);
 			int int_stock = std::stoi(CantidadStock);
-				
+			
+			cout<<CodProducto + " ";
+			cout<<CodCategoria + " ";
+			cout<<Nombre + " ";
+			cout<<PrecioUnit + " ";
+			cout<<CantidadStock<<endl;
+						
 			Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
 
 			InsertarInicio(o);
@@ -924,6 +931,13 @@ int listaDC:: LeerProductos() { //Leer Productos
 	int int_cat = std::stoi(CodCategoria);
 	float int_precio = std::stoi(PrecioUnit);
 	int int_stock = std::stoi(CantidadStock);
+	
+	cout<<CodProducto + " ";
+	cout<<CodCategoria + " ";
+	cout<<Nombre + " ";
+	cout<<PrecioUnit + " ";
+	cout<<CantidadStock<<endl;
+	
   	
   	Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
 	InsertarInicio(o);
@@ -938,12 +952,17 @@ int listaDC:: LeerProductos() { //Leer Productos
 int main()
 	{
 	listaDC ListaProveedores;
-	//Proveedor o;
-	//ListaProveedores.InsertarInicio(o);
+
+	listaDC ListaProductos;
+	listaDC ListaClientes;
+
 	listaDC ListaCategorias;
 	
 	//ListaProveedores.LeerProveedores();
 	ListaCategorias.LeerCategorias();
+	
+	ListaProductos.LeerProductos();
+	
 	
 	return 0;
 	

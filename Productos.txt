@@ -1,0 +1,6 @@
+223;124;Sanipiny;4990.0;50
+224;124;Suavitel;3980.0;100
+225;147;Salchichon;4550.0;15
+226;451;Cinta industrial;1600.0;20
+227;475;Papaya;250;50
+228;157;Camisa hombre;8550;10
