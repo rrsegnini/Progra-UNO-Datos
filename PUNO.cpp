@@ -30,9 +30,21 @@ class Proveedor{
 			cout<<Codigo<<endl;
 			return Codigo;
 		}
-		string getNombre();
-		string getDireccion();
-		int getTelefono();
+		
+		string getNombre(){
+			cout<<Nombre<<endl;
+			return Nombre;
+		}
+		
+		string getDireccion(){
+			cout<<Direccion<<endl;
+			return Direccion;
+		}
+		
+		int getTelefono(){
+			cout<<Telefono<<endl;
+			return Telefono;
+		}
 		//int LeerProveedores();
 		
 	private:
@@ -59,20 +71,76 @@ class Categoria{
 			Descripcion = _descripcion;			
 			}
 		
-		int getCodigo();
-		string getDescripcion();
+		int getCodigo(){
+			cout<<Codigo<<endl;
+			return Codigo;
+		}
+		
+		string getDescripcion(){
+			cout<<Descripcion<<endl;
+			return Descripcion;
+		}
 		
 	private:
 		int Codigo;
 		string Descripcion;
 };
 
-/*
+
 class Producto{
-	
+	//CodProducto;CodCategoria;Nombre;PrecioUnit;CantidadStock
 	public:
+		Producto(){
+			CodProducto = 0;
+			CodCategoria = 0;
+			Nombre = "Nulo";
+			PrecioUnit = 0.0;
+			CantidadStock = 1;
+		}
+		
+		Producto(int _codP, int _codC, string _nomC, float _precio, int _stock){
+			
+			CodProducto = _codP;
+			CodCategoria = _codC;
+			Nombre = _nomC;
+			PrecioUnit = _precio;
+			CantidadStock = _stock;
+		}
+		
+		int getCodProducto(){
+			cout<<CodProducto<<endl;
+			return CodProducto;
+		}
+		
+		int getCodCategoria(){
+			cout<<CodCategoria<<endl;
+			return CodCategoria;
+		}
+		
+		string getNombre(){
+			cout<<Nombre<<endl;
+			return Nombre;
+		}
+		
+		float getPrecioUnit(){
+			cout<<PrecioUnit<<endl;
+			return PrecioUnit;
+		}
+		
+		int getCantidadStock(){
+			cout<<CantidadStock<<endl;
+			return CantidadStock;
+		}
+	
+	
+	private:
+		int CodProducto;
+		int CodCategoria;
+		string Nombre;
+		float PrecioUnit;
+		int CantidadStock;
 };
-*/
+
 
 
 //////////////END CLASES PARA LOS ARCHIVOS DE TEXTO//////////////
@@ -138,7 +206,7 @@ class nodo {
 	       valorC = v;
 	       siguiente = signodo;
 	    }
-		//Fin Constructor pnodo
+		//Fin Constructor Categoria
 		
 		
  private:
