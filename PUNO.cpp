@@ -143,6 +143,56 @@ class Producto{
 
 
 
+
+class Cliente{
+	//Cedula;Nombre_c;Direccion_c;Telefono_C
+	public:
+		Cliente(){
+		Cedula = 0;
+		Nombre_c = "Nulo";
+		Direccion_c = "Nulo";
+		Telefono_c = 0;
+		}
+		
+		Cliente(int _ced, string _name, string _direccion, int _tel)
+			{
+			Cedula = _ced;
+			Nombre_c = _name;
+			Direccion_c = _direccion;
+			Telefono_c = _tel;			
+			}
+		
+		int getCedula(){
+			cout<<"Este es el codiguito: ";
+			cout<<Cedula<<endl;
+			return Cedula;
+		}
+		
+		string getNombre(){
+			cout<<Nombre_c<<endl;
+			return Nombre_c;
+		}
+		
+		string getDireccion(){
+			cout<<Direccion_c<<endl;
+			return Direccion_c;
+		}
+		
+		int getTelefono(){
+			cout<<Telefono_c<<endl;
+			return Telefono_c;
+		}
+		
+	private:
+		int Cedula;
+		string Nombre_c;
+		string Direccion_c;
+		int Telefono_c;
+		
+		
+};
+
+
 //////////////END CLASES PARA LOS ARCHIVOS DE TEXTO//////////////
 
 
@@ -209,10 +259,48 @@ class nodo {
 		//Fin Constructor Categoria
 		
 		
+		
+		//Constructor Producto
+		nodo(Producto* v)
+			{
+	    	valorPp = v;
+	    	siguiente = NULL;
+	    	anterior =NULL;
+	    	}
+		
+	   nodo(Producto* v, nodo * signodo)
+	    {
+	    	
+	       valorPp = v;
+	       siguiente = signodo;
+	    }
+		//Fin Constructor Producto
+		
+		
+		//Constructor Cliente
+		nodo(Cliente* v)
+			{
+	    	valorCl = v;
+	    	siguiente = NULL;
+	    	anterior =NULL;
+	    	}
+		
+	   nodo(Cliente* v, nodo * signodo)
+	    {
+	    	
+	       valorCl = v;
+	       siguiente = signodo;
+	    }
+		//Fin Constructor Cliente
+		
+		
  private:
     int valor;
     Proveedor* valorP;
     Categoria* valorC;
+    Producto* valorPp;
+    Cliente* valorCl;
+    
     nodo *siguiente;
     nodo *anterior;
     
@@ -248,9 +336,11 @@ class listaDC {
     
     int LeerProveedores();
     void InsertarInicio(Proveedor* v);
-    //void InsertarInicio(pnodo v);
     int LeerCategorias();
     void InsertarInicio(Categoria* v);
+    void InsertarInicio(Producto* v);
+    int LeerProductos();
+    void InsertarInicio(Cliente* v);
     
    private:
     pnodo primero;
@@ -355,6 +445,54 @@ void listaDC::InsertarInicio(Categoria* v)
    }
 }
 //Fin Insertar para Categoria
+
+
+
+//Insertar para Producto
+void listaDC::InsertarInicio(Producto* v)
+{
+  
+   if (ListaVacia())
+   {
+     primero = new nodo(v);
+     primero->anterior=primero;
+     primero->siguiente=primero;
+   }  
+   else
+   {
+     pnodo nuevo=new nodo (v);
+     nuevo->siguiente=primero;
+     nuevo->anterior= primero->anterior;
+     primero->anterior->siguiente=nuevo;
+     nuevo->siguiente->anterior=nuevo;
+     primero= nuevo;
+   }
+}
+//Fin Insertar para Producto
+
+
+
+//Insertar para Cliente
+void listaDC::InsertarInicio(Cliente* v)
+{
+   if (ListaVacia())
+   {
+     primero = new nodo(v);
+     primero->anterior=primero;
+     primero->siguiente=primero;
+   }  
+   else
+   {
+     pnodo nuevo=new nodo (v);
+     nuevo->siguiente=primero;
+     nuevo->anterior= primero->anterior;
+     primero->anterior->siguiente=nuevo;
+     nuevo->siguiente->anterior=nuevo;
+     primero= nuevo;
+   }
+}
+//Fin Insertar para Cliente
+
 
 
 void listaDC::InsertarFinal(int v)
@@ -608,7 +746,7 @@ int listaDC:: LeerProveedores() { //Leer Proveedores
 	return 0;
 }
 
-int listaDC:: LeerCategorias() { //Leer Proveedores
+int listaDC:: LeerCategorias() { //Leer Categorías
 
 	string cod_c;
 	string des_c;
@@ -683,22 +821,115 @@ int listaDC:: LeerCategorias() { //Leer Proveedores
   	is.close();                // close file
   	des_c = l;
   	int int_cod = std::stoi(cod_c);
-  	
-
-  	Categoria * o = new Categoria(int_cod, des_c);
-		
+  	Categoria * o = new Categoria(int_cod, des_c);	
 	InsertarInicio(o);
 	delete o;
-	
 	std::cout << cod_c << endl;
 	cout << des_c << endl;
-
-	
-	//Mostrar();
 	return 0;
 }
 
 
+
+int listaDC:: LeerProductos() { //Leer Productos
+	
+	
+	string CodProducto;
+	string CodCategoria;
+	string Nombre;
+	string PrecioUnit;
+	string CantidadStock;
+
+  	int cont = 1;
+
+	std::ifstream is("Categorías.txt");     // open file
+	
+	char c;
+	string l;
+	while (is.get(c))          // loop getting single characters
+		{
+		if (cont <= 5 )
+			{
+				
+			if (c != ';')
+		    	{
+		    	if (c == '\n')
+		    		{
+		    		CantidadStock = l;
+		    		cont++;	
+					l = "";
+					
+					}
+				else
+					{
+					l = l + c;
+					}
+		    	
+				//std::cout << l << endl;
+				}
+			else
+				{
+				switch (cont)
+					{
+					case 1: CodProducto = l;
+					break;
+					
+					case 2: CodCategoria = l;
+					break;
+					
+					case 3: Nombre = l;
+					break;
+					
+					case 4: PrecioUnit = l;
+					break;
+					
+					case 5: CantidadStock = l;
+					break;
+					}
+				cont++;	
+				l = "";
+				}
+			}
+		else
+			{
+			int int_cod = std::stoi(CodProducto);
+			int int_cat = std::stoi(CodCategoria);
+			float int_precio = std::stoi(PrecioUnit);
+			int int_stock = std::stoi(CantidadStock);
+				
+			Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
+
+			InsertarInicio(o);
+			delete o;
+			
+			l = c;
+
+			CodProducto = "";
+  			CodCategoria = "";
+  			Nombre = "";
+  			PrecioUnit = "";
+  			CantidadStock = "";
+
+  			
+  			cont = 1;
+  			
+			}
+		
+		}
+
+  	is.close();                // close file
+  	CantidadStock = l;
+  	
+  	int int_cod = std::stoi(CodProducto);
+	int int_cat = std::stoi(CodCategoria);
+	float int_precio = std::stoi(PrecioUnit);
+	int int_stock = std::stoi(CantidadStock);
+  	
+  	Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
+	InsertarInicio(o);
+	delete o;
+	return 0;
+}
 
 
 
