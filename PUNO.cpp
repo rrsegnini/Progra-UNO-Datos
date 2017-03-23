@@ -26,8 +26,7 @@ class Proveedor{
 			}
 		
 		int getCodigo(){
-			cout<<"Este es el codiguito: ";
-			cout<<Codigo<<endl;
+			//cout<<Codigo<<endl;
 			return Codigo;
 		}
 		
@@ -72,12 +71,12 @@ class Categoria{
 			}
 		
 		int getCodigo(){
-			cout<<Codigo<<endl;
+			//cout<<Codigo<<endl;
 			return Codigo;
 		}
 		
 		string getDescripcion(){
-			cout<<Descripcion<<endl;
+			//cout<<Descripcion<<endl;
 			return Descripcion;
 		}
 		
@@ -108,17 +107,17 @@ class Producto{
 		}
 		
 		int getCodProducto(){
-			cout<<CodProducto<<endl;
+			//cout<<CodProducto<<endl;
 			return CodProducto;
 		}
 		
 		int getCodCategoria(){
-			cout<<CodCategoria<<endl;
+			//cout<<CodCategoria<<endl;
 			return CodCategoria;
 		}
 		
 		string getNombre(){
-			cout<<Nombre<<endl;
+			//cout<<Nombre<<endl;
 			return Nombre;
 		}
 		
@@ -130,6 +129,15 @@ class Producto{
 		int getCantidadStock(){
 			cout<<CantidadStock<<endl;
 			return CantidadStock;
+		}
+		
+		void toString(){
+			cout<<"ESTE ES EL toSTRING "<<endl;
+			cout<<CodProducto<<" ";
+			cout<<CodCategoria<<" ";
+			cout<<Nombre<<" ";
+			cout<<PrecioUnit<<" ";
+			cout<<CantidadStock<<endl;
 		}
 	
 	
@@ -341,6 +349,13 @@ class listaDC {
     void InsertarInicio(Producto* v);
     int LeerProductos();
     void InsertarInicio(Cliente* v);
+    int LeerClientes();
+    
+    bool VerificarProveedor(int cod);
+    bool VerificarCliente(string nom);
+    void MostrarProductos(string cat, listaDC Cats);
+    string MostrarCategoria(int cod);
+    
     
    private:
     pnodo primero;
@@ -407,7 +422,6 @@ void listaDC::InsertarInicio(Proveedor* v)
      primero = new nodo(v);
      primero->anterior=primero;
      primero->siguiente=primero;
-     cout<<"PBA UNO"<<endl;
    }  
    else
    {
@@ -417,7 +431,6 @@ void listaDC::InsertarInicio(Proveedor* v)
      primero->anterior->siguiente=nuevo;
      nuevo->siguiente->anterior=nuevo;
      primero= nuevo;
-     cout<<"PBA DOS"<<endl;
    }
 }
 //Fin Insertar para Proveedor
@@ -633,11 +646,11 @@ void listaDC::Mostrar()
    pnodo aux=primero;
    while(aux->siguiente!=primero)
      {
-                  
-      cout << aux->valorP << "-> ";
+     (aux->valorPp)->getCodProducto();         
+      cout << aux->valorPp << "-> ";
       aux = aux->siguiente;
      }
-     cout<<aux->valorP<<"->";
+     cout<<aux->valorPp<<"->";
      cout<<endl;
 }   
 //////////////END LISTA CIRCULAR DOBLE//////////////
@@ -709,7 +722,7 @@ int listaDC:: LeerProveedores() { //Leer Proveedores
 			Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
 
 			InsertarInicio(o);
-			delete o;
+			
 			
 			l = c;
 			std::cout << cod_p << endl;
@@ -735,7 +748,7 @@ int listaDC:: LeerProveedores() { //Leer Proveedores
   	Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
 		
 	InsertarInicio(o);
-	delete o;
+	
 	
 	std::cout << cod_p << endl;
 	cout << nom_p << endl;
@@ -801,7 +814,7 @@ int listaDC:: LeerCategorias() { //Leer Categorías
 			Categoria * o = new Categoria(int_cod, des_c);
 
 			InsertarInicio(o);
-			delete o;
+			
 			
 			l = c;
 			std::cout << cod_c << endl;
@@ -823,7 +836,7 @@ int listaDC:: LeerCategorias() { //Leer Categorías
   	int int_cod = std::stoi(cod_c);
   	Categoria * o = new Categoria(int_cod, des_c);	
 	InsertarInicio(o);
-	delete o;
+	
 	std::cout << cod_c << endl;
 	cout << des_c << endl;
 	return 0;
@@ -851,7 +864,6 @@ int listaDC:: LeerProductos() { //Leer Productos
 		{
 		if (cont <= 5 )
 			{
-				
 			if (c != ';')
 		    	{
 		    	if (c == '\n')
@@ -859,14 +871,11 @@ int listaDC:: LeerProductos() { //Leer Productos
 		    		CantidadStock = l;
 		    		cont++;	
 					l = "";
-					
 					}
 				else
 					{
 					l = l + c;
 					}
-		    	
-				//std::cout << l << endl;
 				}
 			else
 				{
@@ -874,16 +883,12 @@ int listaDC:: LeerProductos() { //Leer Productos
 					{
 					case 1: CodProducto = l;
 					break;
-					
 					case 2: CodCategoria = l;
 					break;
-					
 					case 3: Nombre = l;
 					break;
-					
 					case 4: PrecioUnit = l;
 					break;
-					
 					case 5: CantidadStock = l;
 					break;
 					}
@@ -903,11 +908,12 @@ int listaDC:: LeerProductos() { //Leer Productos
 			cout<<Nombre + " ";
 			cout<<PrecioUnit + " ";
 			cout<<CantidadStock<<endl;
-						
+					
 			Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
-
+			
 			InsertarInicio(o);
-			delete o;
+		//	o->toString();
+		//	delete o;
 			
 			l = c;
 
@@ -931,23 +937,231 @@ int listaDC:: LeerProductos() { //Leer Productos
 	int int_cat = std::stoi(CodCategoria);
 	float int_precio = std::stoi(PrecioUnit);
 	int int_stock = std::stoi(CantidadStock);
-	
+	/*
 	cout<<CodProducto + " ";
 	cout<<CodCategoria + " ";
 	cout<<Nombre + " ";
 	cout<<PrecioUnit + " ";
 	cout<<CantidadStock<<endl;
-	
+	*/
   	
   	Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
 	InsertarInicio(o);
-	delete o;
+	//o->toString();
+	//o->getCodProducto();
+	//delete o;
+	return 0;
+}
+
+
+int listaDC:: LeerClientes() { //Leer Clientes
+	
+	cout<<"Clientes: "<<endl;
+	
+	string CedulaCliente;
+	string NombreCliente;
+	string DireccionCliente;
+	string TelefonoCliente;
+
+
+  	int cont = 1;
+
+	std::ifstream is("Clientes.txt");     // open file
+	
+	char c;
+	string l;
+	while (is.get(c))          // loop getting single characters
+		{
+		if (cont <= 4 )
+			{
+			if (c != ';')
+		    	{
+		    	if (c == '\n')
+		    		{
+		    		TelefonoCliente = l;
+		    		cont++;	
+					l = "";
+					}
+				else
+					{
+					l = l + c;
+					}
+				}
+			else
+				{
+				switch (cont)
+					{
+					case 1: CedulaCliente = l;
+					break;
+					case 2: NombreCliente = l;
+					break;
+					case 3: DireccionCliente = l;
+					break;
+					case 4: TelefonoCliente = l;
+					break;
+					}
+				cont++;	
+				l = "";
+				}
+			}
+		else
+			{
+			int int_ced = std::stoi(CedulaCliente);
+			int int_tel = std::stoi(TelefonoCliente);
+			
+			cout<<CedulaCliente + " ";
+			cout<<NombreCliente + " ";
+			cout<<DireccionCliente + " ";
+			cout<<TelefonoCliente<<endl;
+						
+			Cliente * o = new Cliente(int_ced, NombreCliente, DireccionCliente, int_tel); 
+
+			InsertarInicio(o);
+			
+			
+			l = c;
+
+			CedulaCliente = "";
+  			NombreCliente = "";
+  			DireccionCliente = "";
+  			TelefonoCliente = "";
+	
+  			cont = 1;
+  			
+			}
+		
+		}
+
+  	is.close();                // close file
+  	TelefonoCliente = l;
+  	
+  	int int_ced = std::stoi(CedulaCliente);
+	int int_tel = std::stoi(TelefonoCliente);
+			
+	cout<<CedulaCliente + " ";
+	cout<<NombreCliente + " ";
+	cout<<DireccionCliente + " ";
+	cout<<TelefonoCliente<<endl;
+						
+	Cliente * o = new Cliente(int_ced, NombreCliente, DireccionCliente, int_tel); 
+
+	InsertarInicio(o);
+	
+	
 	return 0;
 }
 
 
 
+bool listaDC::VerificarProveedor(int cod)
+	{
+	pnodo aux = primero;
+	int temp;
+	
+	if ((aux->valorP)->getCodigo() == cod)
+		{
+		cout<<"YESS"<<endl;
+		return true;
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorP)->getCodigo();
+		
+		if (temp == cod)
+			{
+			cout<<"Sí ta"<<endl;
+			return true;
+			}
+		else
+			{
+				cout<<"asdasdas"<<endl;
+			aux=aux->siguiente;
+			}
+		}
+	cout<<"No ta"<<endl;
+	return false;
+	}
+	
+	
+bool listaDC::VerificarCliente(string nom)
+	{
+	pnodo aux = primero;
+	string temp;
+	
+	if ((aux->valorCl)->getNombre() == nom)
+		{
+		cout<<"YESS"<<endl;
+		return true;
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorCl)->getNombre();
+		
+		if (temp == nom)
+			{
+			cout<<"Sí ta"<<endl;
+			return true;
+			}
+		else
+			{
+			aux=aux->siguiente;
+			}
+		}
+	cout<<"Proveedor inválido"<<endl;
+	return false;
+	}
 
+
+string listaDC::MostrarCategoria(int cod)
+	{
+	pnodo aux = primero;
+	if ((aux->valorC)->getCodigo() == cod)
+		{
+		return (aux->valorC)->getDescripcion();
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		if ((aux->valorC)->getCodigo() == cod)
+			{
+			return (aux->valorC)->getDescripcion();
+			}
+		aux = aux->siguiente;
+		}
+	return "No está";
+	}
+
+
+void listaDC::MostrarProductos(string cat, listaDC Cats)
+	{
+	listaDC ListaCategorias;
+	pnodo aux = primero;
+	int cont = 1;
+	string temp = Cats.MostrarCategoria((aux->valorPp)->getCodCategoria());
+	if (temp == cat)
+		{
+		cout<<cont<<". ";
+		cout<<(aux->valorPp)->getNombre()<<endl;
+		cont++;
+		}
+	aux = aux->siguiente;
+	while (aux != primero)
+		{
+		temp = Cats.MostrarCategoria((aux->valorPp)->getCodCategoria());
+		if (temp == cat)
+			{
+			cout<<cont<<". "<<(aux->valorPp)->getNombre()<<endl;
+			cont++;
+			}
+		aux = aux->siguiente;		
+		}
+
+	}
 
 int main()
 	{
@@ -958,12 +1172,24 @@ int main()
 
 	listaDC ListaCategorias;
 	
-	//ListaProveedores.LeerProveedores();
+	ListaProveedores.LeerProveedores();
+	ListaClientes.LeerClientes();
 	ListaCategorias.LeerCategorias();
 	
 	ListaProductos.LeerProductos();
+	/*
+	while (true)
+		{
+		cout<<
+		cin.get();
+		}
+	*/
+	//ListaProductos.Mostrar();
 	
-	
+	ListaProveedores.VerificarProveedor(89656);
+	ListaClientes.VerificarCliente("Roberto Rojas Segnini");
+	ListaProductos.MostrarProductos("Limpieza", ListaCategorias);
+	//ListaCategorias.MostrarCategoria(147);
 	return 0;
 	
 	}
