@@ -1,0 +1,5 @@
+124;Limpieza
+451;Ferreteria
+475;Verduras
+147;Comidas
+157;Ropa

@@ -3,6 +3,8 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <exception>
+#include <cstdlib>
 using namespace std;
 
 
@@ -342,14 +344,14 @@ class listaDC {
     void borrarPosicion(int pos);
     int largoLista();
     
-    int LeerProveedores();
+    bool LeerProveedores();
     void InsertarInicio(Proveedor* v);
-    int LeerCategorias();
+    bool LeerCategorias();
     void InsertarInicio(Categoria* v);
     void InsertarInicio(Producto* v);
-    int LeerProductos();
+    bool LeerProductos();
     void InsertarInicio(Cliente* v);
-    int LeerClientes();
+    bool LeerClientes();
     
     bool VerificarProveedor(int cod);
     bool VerificarCliente(string nom);
@@ -661,12 +663,40 @@ void listaDC::Mostrar()
 
 
 
-int listaDC:: LeerProveedores() { //Leer Proveedores
+///////## Verificar entero ##///////
+bool VerificarEntero(string num)
+	{
+	int int_num;
+	try{
+		int_num = std::stoi(num);
+		}
+	catch (std::exception& e) {
+    	std::cerr << "******************ERROR******************\n";
+    	return false;
+    	//std::terminate();
+ 		}
+	return true;			
+	}
+	
+int RetornarEntero(string num)
+	{
+	int int_num;
+	int_num = std::stoi(num);
+	
+	return int_num;
+	}
+///////## END Verificar entero ##///////
+
+
+
+bool listaDC:: LeerProveedores() { //Leer Proveedores
   	string cod_p;
   	string nom_p;
   	string dir_p;
   	string tel_p;
   	int cont = 1;
+  	int int_num;
+	int int_cod;
 
 	std::ifstream is("Proveedores.txt");     // open file
 	
@@ -718,28 +748,37 @@ int listaDC:: LeerProveedores() { //Leer Proveedores
 			{
 			
 			//LLAMAR A LA FUNCION PARA CREAR EL PROVEEDOR//
-			
-			int int_num = std::stoi(tel_p);
-			int int_cod = std::stoi(cod_p);
+			if (VerificarEntero(tel_p) && VerificarEntero(cod_p))
+				{
+				int_num = RetornarEntero(tel_p);
+				int_cod = RetornarEntero(cod_p);
 				
-			Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
-
-			InsertarInicio(o);
+					
+				Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
+	
+				InsertarInicio(o);
+				
+				
+				l = c;
+				/*
+				std::cout << cod_p << endl;
+				cout << nom_p << endl;
+				cout << dir_p << endl;
+				cout << tel_p << endl;
+				*/
+				cod_p = "";
+	  			nom_p = "";
+	  			dir_p = "";
+	  			tel_p = "";
+	  			
+	  			cont = 1;
+				}
+			else
+				{
+				cout<<"Error en los códigos de los proveedores.";
+				return false;
+				}
 			
-			
-			l = c;
-			/*
-			std::cout << cod_p << endl;
-			cout << nom_p << endl;
-			cout << dir_p << endl;
-			cout << tel_p << endl;
-			*/
-			cod_p = "";
-  			nom_p = "";
-  			dir_p = "";
-  			tel_p = "";
-  			
-  			cont = 1;
   			
 			}
 		
@@ -747,27 +786,28 @@ int listaDC:: LeerProveedores() { //Leer Proveedores
 
   	is.close();                // close file
   	tel_p = l;
-  	int int_num = std::stoi(tel_p);
-	int int_cod = std::stoi(cod_p);
-  	Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
+  	
+  	if (VerificarEntero(tel_p) && VerificarEntero(cod_p))
+  		{
+		  
+	  	int_num = RetornarEntero(tel_p);
+		int_cod = RetornarEntero(cod_p);
 		
-	InsertarInicio(o);
-	
-	/*
-	std::cout << cod_p << endl;
-	cout << nom_p << endl;
-	cout << dir_p << endl;
-	cout << tel_p << endl;
-	*/
-
-	return 0;
+	  	Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
+			
+		InsertarInicio(o);
+		return true;
+		}
+	cout<<"*********Error en los codigos de los proveedores*********"<<endl;
+	return false;
 }
 
-int listaDC:: LeerCategorias() { //Leer Categorías
+bool listaDC:: LeerCategorias() { //Leer Categorías
 
 	string cod_c;
 	string des_c;
   	int cont = 1;
+  	int int_cod;
 
 	std::ifstream is("Categorías.txt");     // open file
 	
@@ -808,51 +848,60 @@ int listaDC:: LeerCategorias() { //Leer Categorías
 			}
 		else
 			{
-			int int_cod = std::stoi(cod_c);
+			if (VerificarEntero(cod_c))
+				{
+				int_cod = RetornarEntero(cod_c);
+					
+				Categoria * o = new Categoria(int_cod, des_c);
+	
+				InsertarInicio(o);
 				
-			Categoria * o = new Categoria(int_cod, des_c);
-
-			InsertarInicio(o);
-			
-			
-			l = c;
-			/*
-			std::cout << cod_c << endl;
-			cout << des_c << endl;
-			*/
-			
-			cod_c = "";
-  			des_c = "";
-
-  			
-  			cont = 1;
-  			
+				
+				l = c;
+				
+				cod_c = "";
+	  			des_c = "";
+	
+	  			
+	  			cont = 1;
+	  			}
+	  		else{
+	  			cout<<"*********Error en las categorias*********"<<endl;
+	  			return false;
+			  	}
 			}
 		
 		}
 
   	is.close();                // close file
   	des_c = l;
-  	int int_cod = std::stoi(cod_c);
-  	Categoria * o = new Categoria(int_cod, des_c);	
-	InsertarInicio(o);
-	
-	/*
-	std::cout << cod_c << endl;
-	cout << des_c << endl;
-	*/
-	return 0;
+  	
+  	if (VerificarEntero(cod_c))
+	  	{
+		int_cod = RetornarEntero(cod_c);
+		
+		Categoria * o = new Categoria(int_cod, des_c);	
+		InsertarInicio(o);
+		return true;
+		}
+	cout<<"*********Error en las categorias*********"<<endl;
+	return false;
 }
 
 
 
-int listaDC:: LeerProductos() { //Leer Productos
+bool listaDC:: LeerProductos() { //Leer Productos
 	
 	string CodProducto;
 	string CodCategoria;
 	string Nombre;
 	string PrecioUnit;
 	string CantidadStock;
+	
+	int int_cod;
+	int int_cat;
+	float int_precio;
+	int int_stock;
 
   	int cont = 1;
 
@@ -898,34 +947,33 @@ int listaDC:: LeerProductos() { //Leer Productos
 			}
 		else
 			{
-			int int_cod = std::stoi(CodProducto);
-			int int_cat = std::stoi(CodCategoria);
-			float int_precio = std::stoi(PrecioUnit);
-			int int_stock = std::stoi(CantidadStock);
-			/*
-			cout<<CodProducto + " ";
-			cout<<CodCategoria + " ";
-			cout<<Nombre + " ";
-			cout<<PrecioUnit + " ";
-			cout<<CantidadStock<<endl;
-			*/		
-			Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
-			
-			InsertarInicio(o);
-		//	o->toString();
-		//	delete o;
-			
-			l = c;
-
-			CodProducto = "";
-  			CodCategoria = "";
-  			Nombre = "";
-  			PrecioUnit = "";
-  			CantidadStock = "";
-
-  			
-  			cont = 1;
-  			
+			if (VerificarEntero(CodProducto) && VerificarEntero(CodCategoria) && VerificarEntero(PrecioUnit) && VerificarEntero(CantidadStock))
+				{
+				int_cod = RetornarEntero(CodProducto);
+				int_cat = RetornarEntero(CodCategoria);
+				int_precio = RetornarEntero(PrecioUnit);
+				int_stock = RetornarEntero(CantidadStock);
+						
+				Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
+				
+				InsertarInicio(o);
+		
+				
+				l = c;
+	
+				CodProducto = "";
+	  			CodCategoria = "";
+	  			Nombre = "";
+	  			PrecioUnit = "";
+	  			CantidadStock = "";
+	
+	  			
+	  			cont = 1;
+	  			}
+	  		else{
+	  			cout<<"*********Error en los productos*********"<<endl;
+				return false;
+			  }
 			}
 		
 		}
@@ -933,33 +981,29 @@ int listaDC:: LeerProductos() { //Leer Productos
   	is.close();                // close file
   	CantidadStock = l;
   	
-  	int int_cod = std::stoi(CodProducto);
-	int int_cat = std::stoi(CodCategoria);
-	float int_precio = std::stoi(PrecioUnit);
-	int int_stock = std::stoi(CantidadStock);
-	/*
-	cout<<CodProducto + " ";
-	cout<<CodCategoria + " ";
-	cout<<Nombre + " ";
-	cout<<PrecioUnit + " ";
-	cout<<CantidadStock<<endl;
-	*/
-  	
-  	Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
-	InsertarInicio(o);
-	//o->toString();
-	//o->getCodProducto();
-	//delete o;
-	return 0;
+  	if (VerificarEntero(CodProducto) && VerificarEntero(CodCategoria) && VerificarEntero(PrecioUnit) && VerificarEntero(CantidadStock)){
+  		int_cod = RetornarEntero(CodProducto);
+		int_cat = RetornarEntero(CodCategoria);
+		int_precio = RetornarEntero(PrecioUnit);
+		int_stock = RetornarEntero(CantidadStock);
+		Producto * o = new Producto(int_cod, int_cat, Nombre, int_precio, int_stock); 
+		InsertarInicio(o);
+		return true;
+	  	}
+	cout<<"*********Error en los productos*********"<<endl;
+	return false;
 }
 
 
-int listaDC:: LeerClientes() { //Leer Clientes
+bool listaDC:: LeerClientes() { //Leer Clientes
 
 	string CedulaCliente;
 	string NombreCliente;
 	string DireccionCliente;
 	string TelefonoCliente;
+	
+	int int_ced;
+	int int_tel;
 
 
   	int cont = 1;
@@ -1004,49 +1048,45 @@ int listaDC:: LeerClientes() { //Leer Clientes
 			}
 		else
 			{
-			int int_ced = std::stoi(CedulaCliente);
-			int int_tel = std::stoi(TelefonoCliente);
-			/*
-			cout<<CedulaCliente + " ";
-			cout<<NombreCliente + " ";
-			cout<<DireccionCliente + " ";
-			cout<<TelefonoCliente<<endl;
-			*/			
-			Cliente * o = new Cliente(int_ced, NombreCliente, DireccionCliente, int_tel); 
-
-			InsertarInicio(o);
+			if (VerificarEntero(CedulaCliente) && VerificarEntero(TelefonoCliente))
+				{
+				int_ced = RetornarEntero(CedulaCliente);
+				int_tel = RetornarEntero(TelefonoCliente);
 			
-			
-			l = c;
-
-			CedulaCliente = "";
-  			NombreCliente = "";
-  			DireccionCliente = "";
-  			TelefonoCliente = "";
+				Cliente * o = new Cliente(int_ced, NombreCliente, DireccionCliente, int_tel); 
 	
-  			cont = 1;
-  			
-			}
+				InsertarInicio(o);
+				
+				
+				l = c;
+	
+				CedulaCliente = "";
+	  			NombreCliente = "";
+	  			DireccionCliente = "";
+	  			TelefonoCliente = "";
 		
+	  			cont = 1;
+  				}
+  			else{
+  				cout<<"*********Error en el archivo de clientes*********"<<endl;
+				return false;
+			  }
+			}
 		}
 
   	is.close();                // close file
   	TelefonoCliente = l;
-  	
-  	int int_ced = std::stoi(CedulaCliente);
-	int int_tel = std::stoi(TelefonoCliente);
-	/*		
-	cout<<CedulaCliente + " ";
-	cout<<NombreCliente + " ";
-	cout<<DireccionCliente + " ";
-	cout<<TelefonoCliente<<endl;
-	*/					
-	Cliente * o = new Cliente(int_ced, NombreCliente, DireccionCliente, int_tel); 
+  	if (VerificarEntero(CedulaCliente) && VerificarEntero(TelefonoCliente))
+		{
+		int_ced = RetornarEntero(CedulaCliente);
+		int_tel = RetornarEntero(TelefonoCliente);
+		Cliente * o = new Cliente(int_ced, NombreCliente, DireccionCliente, int_tel); 
 
-	InsertarInicio(o);
-	
-	
-	return 0;
+		InsertarInicio(o);
+		return true;
+		}
+	cout<<"*********Error en el archivo de clientes*********"<<endl;
+	return false;
 }
 
 
@@ -1216,6 +1256,7 @@ void listaDC::MostrarTodasCategorias()
 
 int main()
 	{
+	
 	string cod_input;
 	string nom_input;
 	string cat_input;
@@ -1226,57 +1267,59 @@ int main()
 	listaDC ListaClientes;
 
 	listaDC ListaCategorias;
-	
+	/*
 	ListaProveedores.LeerProveedores();
 	ListaClientes.LeerClientes();
 	ListaCategorias.LeerCategorias();
 	
 	ListaProductos.LeerProductos();
+	*/
+	//ListaProveedores.MostrarProveedores();
 	
-	ListaProveedores.MostrarProveedores();
-	
-	while (true)
+	if (ListaProveedores.LeerProveedores() && ListaClientes.LeerClientes() && ListaCategorias.LeerCategorias() && ListaProductos.LeerProductos())
 		{
-		cout<<"Ingrese el codigo del vendedor: "; 
-		std::getline(std::cin,cod_input);
-		
-		int cod_input_int = std::stoi(cod_input);
-
-		//ListaProveedores.VerificarProveedor(cod_input_int);
-		if (ListaProveedores.VerificarProveedor(cod_input_int))
+		ListaProveedores.MostrarProveedores();
+		while (true)
 			{
-			cout<<"------------------------ Clientes regulares: ------------------------"<<endl;
+			cout<<"Ingrese el codigo del vendedor: "; 
+			std::getline(std::cin,cod_input);
 			
-			ListaClientes.MostrarClientes();
+			int cod_input_int = std::stoi(cod_input);
+	
+			//ListaProveedores.VerificarProveedor(cod_input_int);
+			if (ListaProveedores.VerificarProveedor(cod_input_int))
+				{
+				cout<<"------------------------ Clientes regulares: ------------------------"<<endl;
+				
+				ListaClientes.MostrarClientes();
+				
+				cout<<"\nIngrese el nombre completo del cliente: ";
+				std::getline(std::cin,nom_input);
+				ListaClientes.VerificarCliente(nom_input);
+				
+				cout<<"------------------------ Categorias de productos disponibles: ------------------------"<<endl;
+				ListaCategorias.MostrarTodasCategorias();
+				
+				cout<<"\nIngrese el nombre de la categoria: ";
+				std::getline(std::cin,cat_input);
+				
+				cout<<"------------------------  Productos disponibles en esta categoria: ------------------------"<<endl;
+				ListaProductos.MostrarProductos(cat_input, ListaCategorias);
+				
+				break;
+				}
 			
-			cout<<"\nIngrese el nombre completo del cliente: ";
-			std::getline(std::cin,nom_input);
-			ListaClientes.VerificarCliente(nom_input);
-			
-			cout<<"------------------------ Categorias de productos disponibles: ------------------------"<<endl;
-			ListaCategorias.MostrarTodasCategorias();
-			
-			cout<<"\nIngrese el nombre de la categoria: ";
-			std::getline(std::cin,cat_input);
-			
-			cout<<"------------------------  Productos disponibles en esta categoria: ------------------------"<<endl;
-			ListaProductos.MostrarProductos(cat_input, ListaCategorias);
-			
-			break;
+				
+				
+			cin.sync();
+			cod_input="";
 			}
 		
-			
-			
-		cin.sync();
-		cod_input="";
+	
+		return 0;
 		}
-	
-	//ListaProductos.Mostrar();
-	
-	//ListaProveedores.VerificarProveedor(89656);
-	//ListaClientes.VerificarCliente("Roberto Rojas Segnini");
-	//ListaProductos.MostrarProductos("Limpieza", ListaCategorias);
-	//ListaCategorias.MostrarCategoria(147);
-	return 0;
-	
+	else{
+		return 0;
+	}
+
 	}

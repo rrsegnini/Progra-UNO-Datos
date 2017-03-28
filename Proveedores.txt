@@ -1,3 +1,5 @@
-45869;Montecillos;Alajuela;86582179
-78945;H&R;USA;86582179
-89656;Rojas & Rojas;Heredia;88291390
+01;Pedro;Heredia;84376405
+02;Esteban;SanJose;67893342
+03;Luis;Alajuela;88560123
+01;Laura;Alajuela;45976112
+04;Alejandro;Cartago;7894564
