@@ -8,6 +8,100 @@
 using namespace std;
 
 
+
+class ItemFactura{
+	
+	public:
+		ItemFactura()
+			{
+			CodigoProveedor;
+			NombreCliente;
+			Descuento;
+			CodigoCategoria;
+			NombreCategoria;
+			cantidadProducto;
+			NombreProducto;
+			PrecioUnitario;
+			PrecioTotal;
+			
+			}
+		
+		ItemFactura(int _CodigoProveedor, string _NombreCliente, 
+		bool _Descuento, int _CodigoCategoria, 
+		string _NombreCategoria, int _cantidadProducto, string _NombreProducto,
+		int _PrecioUnitario, int _PrecioTotal)
+			{
+			CodigoProveedor=_CodigoProveedor;
+			NombreCliente=_NombreCliente;
+			Descuento=_Descuento;
+			CodigoCategoria=_CodigoCategoria;
+			NombreCategoria=_NombreCategoria;
+			cantidadProducto=_cantidadProducto;
+			NombreProducto=_NombreProducto;
+			PrecioUnitario=_PrecioUnitario;
+			PrecioTotal=_PrecioTotal;			
+			}
+		
+		int getCodigoP(){
+			return CodigoProveedor;
+		}
+		string getNombreCliente(){
+			return NombreCliente;
+		}
+		string getCategoria(){
+			return NombreCategoria;
+		}
+			
+		void facturar(){
+			string a = "|||||||||Codigo del proveedor: " +std::to_string(CodigoProveedor) +" ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			string b = "||||||||||Nombre del proveedor: " +std::to_string(CodigoProveedor) + "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			string c = "||||||||||Cliente: " +NombreCliente + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			string d = "|||||Codigo: " + std::to_string(CodigoCategoria) + "  Categoria: " + NombreCategoria + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			string e = "|||||Producto: " + NombreProducto + "  Cantidad: " + std::to_string(PrecioUnitario) + "  Precio unitario:" + std::to_string(PrecioUnitario)  + "|||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			string f = "|||||Precio total: " + std::to_string(PrecioTotal) + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			
+			
+			printf ("%.90s\n", "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","||||||||||||||||||||||||||||||||||INFORMACION DE COMPRA|||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n",a.c_str());
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n",b.c_str());
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			
+			printf ("%.90s\n", c.c_str());
+		
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			
+			printf ("%.90s\n",d.c_str());
+			
+			printf ("%.90s\n",e.c_str());
+			printf ("%.90s\n",f.c_str());
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			
+		}
+		
+		
+	private:
+		int CodigoProveedor;
+		string NombreCliente;
+		bool Descuento;
+		int CodigoCategoria;
+		string NombreCategoria;
+		int cantidadProducto;
+		string NombreProducto;
+		int PrecioUnitario;
+		int PrecioTotal;
+		
+		
+};
+
+
+
+
 //////////////CLASES PARA LOS ARCHIVOS DE TEXTO//////////////
 class Proveedor{
 	
@@ -78,7 +172,6 @@ class Categoria{
 		}
 		
 		string getDescripcion(){
-			//cout<<Descripcion<<endl;
 			return Descripcion;
 		}
 		
@@ -357,13 +450,15 @@ class listaDC {
     
     bool VerificarProveedor(int cod);
     bool VerificarCliente(string nom);
-    void MostrarProductos(string cat, listaDC Cats);
+    void MostrarProductos(string cat, listaDC&  Cats);
     string MostrarCategoria(int cod);
     void MostrarProveedores();
     void MostrarClientes();
     void MostrarTodasCategorias();
     bool VerificarCodUnico(int num);
     bool RevisarCod();
+    int MostrarCodigoCategoria(string cat);
+    int MostrarPrecio(string producto);
     
    private:
     pnodo primero;
@@ -1193,13 +1288,16 @@ bool listaDC::VerificarCliente(string nom)
 	}
 
 
-string listaDC::MostrarCategoria(int cod)
+string listaDC::MostrarCategoria(int cod) //Muestra la categoria segun el codigo de la misma
 	{
 	pnodo aux = primero;
+	string _categoria;
 	
 	if ((aux->valorC)->getCodigo() == cod)
 		{
-		return (aux->valorC)->getDescripcion();
+		_categoria = (aux->valorC)->getDescripcion();
+		return _categoria;
+		//return (aux->valorC)->getDescripcion();
 		}
 	aux = aux->siguiente;
 	
@@ -1211,16 +1309,71 @@ string listaDC::MostrarCategoria(int cod)
 			}
 		aux = aux->siguiente;
 		}
+
 	return "No está";
 	}
 
 
-void listaDC::MostrarProductos(string cat, listaDC Cats)
+int listaDC::MostrarPrecio(string producto) //Muestra el precio de un producti
 	{
-	listaDC ListaCategorias;
+	pnodo aux = primero;
+	
+	if ((aux->valorPp)->getNombre() == producto)
+		{
+			
+		//cout<<(aux->valorPp)->getPrecioUnit();
+		return (aux->valorPp)->getPrecioUnit();
+
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		if ((aux->valorPp)->getNombre() == producto)
+			{
+			return (aux->valorPp)->getPrecioUnit();
+			}
+		aux = aux->siguiente;
+		}
+
+	return 0;
+	}
+
+
+
+int listaDC::MostrarCodigoCategoria(string cat) //Retorna la el codigo de una categoria
+	{
+	pnodo aux = primero;
+
+	
+	if ((aux->valorC)->getDescripcion() == cat)
+		{
+		//cout<<(aux->valorC)->getCodigo();
+		return (aux->valorC)->getCodigo();
+
+
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		if ((aux->valorC)->getDescripcion() == cat)
+			{
+			return (aux->valorC)->getCodigo();
+			}
+		aux = aux->siguiente;
+		}
+
+	return 0;
+	}
+
+void listaDC::MostrarProductos(string cat, listaDC&  Cats) //Muestra todos los productos de una categoria en especifico
+	{
 	pnodo aux = primero;
 	int cont = 1;
 	string temp = Cats.MostrarCategoria((aux->valorPp)->getCodCategoria());
+
+	
 	if (temp == cat)
 		{
 		cout<<cont<<". ";
@@ -1241,7 +1394,7 @@ void listaDC::MostrarProductos(string cat, listaDC Cats)
 
 	}
 
-void listaDC::MostrarProveedores()
+void listaDC::MostrarProveedores() //Muestra en pantalla los proveedores
 	{
 	pnodo aux = primero;
 	int cont = 1;
@@ -1259,11 +1412,10 @@ void listaDC::MostrarProveedores()
 		}
 	}
 
-void listaDC::MostrarClientes()
+void listaDC::MostrarClientes() //Muestra en pantalla los clientes regulares
 	{
 	pnodo aux = primero;
 	int cont = 1;
-	//cout<<"------------------------Proveedores disponibles------------------------"<<endl;
 	
 	cout<<cont<<". "<<(aux->valorCl)->getNombre()<<endl;
 	aux = aux->siguiente;
@@ -1277,7 +1429,7 @@ void listaDC::MostrarClientes()
 		}
 	}
 
-void listaDC::MostrarTodasCategorias()
+void listaDC::MostrarTodasCategorias() //Muestra en pantalla la categoria de los productos
 	{
 	pnodo aux = primero;
 	int cont = 1;
@@ -1303,7 +1455,6 @@ bool listaDC::RevisarCod() //RETORNA TRUE SI HAY ALGUN CODIGO REPETIDO
 	temp = (aux->valorP)->getCodigo();
 
 	if (!VerificarCodUnico(4)){
-		cout<<"JKASFASFASF"<<endl;
 		return true;
 	}
 	aux = aux->siguiente;
@@ -1329,9 +1480,19 @@ bool listaDC::RevisarCod() //RETORNA TRUE SI HAY ALGUN CODIGO REPETIDO
 int main()
 	{
 	
+	
 	string cod_input;
+	
+	int cod_input_int;
 	string nom_input;
 	string cat_input;
+	string pro_input;
+	bool Desc=false;
+	int cod_categoria;
+	int int_cant_input;
+	string cant_input;
+	int precio;
+	
 	
 	listaDC ListaProveedores;
 
@@ -1339,38 +1500,36 @@ int main()
 	listaDC ListaClientes;
 
 	listaDC ListaCategorias;
-	/*
-	ListaProveedores.LeerProveedores();
-	ListaClientes.LeerClientes();
-	ListaCategorias.LeerCategorias();
-	
-	ListaProductos.LeerProductos();
-	*/
-	//ListaProveedores.MostrarProveedores();
-	
-	
-	
+
 	if (ListaProveedores.LeerProveedores() && ListaClientes.LeerClientes() && ListaCategorias.LeerCategorias() && ListaProductos.LeerProductos())
 		{
-			//ListaProveedores.VerificarCodUnico(4);
+			
+			ListaCategorias.MostrarCategoria(2);
+			//ListaProductos.MostrarProductos("Carnes", ListaCategorias);
+			
 		if (ListaProveedores.RevisarCod())
 			{
-			cout<<"************************ERROR************************"<<endl<<"No se aceptan codigos repetidos en los proveedores"<<endl;
+			cout<<endl<<"************************ERROR************************"<<endl<<"No se aceptan codigos repetidos en los proveedores"<<endl;
 			cout<<"Revise el archivo de texto con los proveedores"<<endl<<"**Ningun codigo puede estar repetido**"<<endl;
 			
 			return 0;
 			}
-		//ListaProveedores.VerificarCodUnico(1);
-			
 		ListaProveedores.MostrarProveedores();
 		while (true)
 			{
 			cout<<"Ingrese el codigo del vendedor: "; 
 			std::getline(std::cin,cod_input);
+			try{
+				cod_input_int = std::stoi(cod_input);
+			}
+			catch (std::exception& e) {
+    			std::cerr << "******************ERROR******************\n";
+    			return 0;
+    			//std::terminate();
+ 				}
 			
-			int cod_input_int = std::stoi(cod_input);
 	
-			//ListaProveedores.VerificarProveedor(cod_input_int);
+	
 			if (ListaProveedores.VerificarProveedor(cod_input_int))
 				{
 				cout<<"------------------------ Clientes regulares: ------------------------"<<endl;
@@ -1379,7 +1538,9 @@ int main()
 				
 				cout<<"\nIngrese el nombre completo del cliente: ";
 				std::getline(std::cin,nom_input);
-				ListaClientes.VerificarCliente(nom_input);
+				if (ListaClientes.VerificarCliente(nom_input)){
+					Desc = true;
+				}
 				
 				cout<<"------------------------ Categorias de productos disponibles: ------------------------"<<endl;
 				ListaCategorias.MostrarTodasCategorias();
@@ -1390,7 +1551,28 @@ int main()
 				cout<<"------------------------  Productos disponibles en esta categoria: ------------------------"<<endl;
 				ListaProductos.MostrarProductos(cat_input, ListaCategorias);
 				
-				break;
+				cout<<"\nIngrese el nombre del producto: ";
+				std::getline(std::cin,pro_input);
+				
+				cout<<"\nIngrese el cantidad que desea comprar: ";
+				std::getline(std::cin,cant_input);
+				
+				try{
+					int_cant_input = std::stoi(cant_input);
+					}
+				catch (std::exception& e) {
+    				std::cerr << "******************ERROR******************\n";
+    				return 0;
+ 					}
+				cod_categoria = ListaCategorias.MostrarCodigoCategoria(cat_input);
+				precio = ListaProductos.MostrarPrecio(pro_input);
+				
+				ItemFactura* Item = new ItemFactura(cod_input_int, nom_input, Desc,cod_categoria, cat_input, int_cant_input, pro_input, precio, precio*int_cant_input);
+				
+				//cout<<"|||||||||||||||||||||  Resumen de compra |||||||||||||||||||||"<<endl;
+				
+				Item->facturar();
+				
 				}
 			
 				
