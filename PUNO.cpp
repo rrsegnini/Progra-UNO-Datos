@@ -321,6 +321,8 @@ class nodo {
 };
 
 typedef nodo *pnodo;
+
+
 class listaDC {
    public:
     listaDC() { primero = actual = NULL; }
@@ -360,7 +362,8 @@ class listaDC {
     void MostrarProveedores();
     void MostrarClientes();
     void MostrarTodasCategorias();
-    
+    bool VerificarCodUnico(int num);
+    bool RevisarCod();
     
    private:
     pnodo primero;
@@ -697,7 +700,7 @@ bool listaDC:: LeerProveedores() { //Leer Proveedores
   	int cont = 1;
   	int int_num;
 	int int_cod;
-
+	
 	std::ifstream is("Proveedores.txt");     // open file
 	
 	char c;
@@ -750,28 +753,27 @@ bool listaDC:: LeerProveedores() { //Leer Proveedores
 			//LLAMAR A LA FUNCION PARA CREAR EL PROVEEDOR//
 			if (VerificarEntero(tel_p) && VerificarEntero(cod_p))
 				{
+				
 				int_num = RetornarEntero(tel_p);
 				int_cod = RetornarEntero(cod_p);
 				
-					
+		
 				Proveedor * o = new Proveedor(int_cod, nom_p, dir_p, int_num);
-	
+		
 				InsertarInicio(o);
-				
-				
+					
+					
 				l = c;
-				/*
-				std::cout << cod_p << endl;
-				cout << nom_p << endl;
-				cout << dir_p << endl;
-				cout << tel_p << endl;
-				*/
+				
 				cod_p = "";
-	  			nom_p = "";
-	  			dir_p = "";
-	  			tel_p = "";
-	  			
-	  			cont = 1;
+		  		nom_p = "";
+		  		dir_p = "";
+		  		tel_p = "";
+		  			
+		  		cont = 1;
+		  			
+		  	
+				
 				}
 			else
 				{
@@ -1090,6 +1092,46 @@ bool listaDC:: LeerClientes() { //Leer Clientes
 }
 
 
+bool listaDC:: VerificarCodUnico(int cod)
+	{
+	int cont = 1;
+	pnodo aux = primero;
+	int temp;
+	
+	if ((aux->valorP)->getCodigo() == cod && cont == 2)
+		{
+		cout<<"************ERROR************"<<endl<<"NO SE ACEPTAN CODIGOS REPETIDOS"<<endl;
+		return false;
+		}
+	else{
+		if ((aux->valorP)->getCodigo() == cod)
+			{
+			cont++;
+			}
+	}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorP)->getCodigo();
+		
+		if (temp == cod && cont==2)
+			{
+			cout<<"************ERROR************"<<endl<<"NO SE ACEPTAN CODIGOS REPETIDOS"<<endl;
+			return false;
+			}
+		else
+			{
+			if (temp == cod){
+				cont++;
+			}
+			
+			}
+		aux=aux->siguiente;
+		}
+	return true;
+	}
+
 
 bool listaDC::VerificarProveedor(int cod)
 	{
@@ -1098,7 +1140,6 @@ bool listaDC::VerificarProveedor(int cod)
 	
 	if ((aux->valorP)->getCodigo() == cod)
 		{
-		//cout<<"YESS"<<endl;
 		return true;
 		}
 	aux = aux->siguiente;
@@ -1254,6 +1295,37 @@ void listaDC::MostrarTodasCategorias()
 		}
 	}
 
+bool listaDC::RevisarCod() //RETORNA TRUE SI HAY ALGUN CODIGO REPETIDO
+	{
+	pnodo aux = primero;
+	int temp;
+	
+	temp = (aux->valorP)->getCodigo();
+
+	if (!VerificarCodUnico(4)){
+		cout<<"JKASFASFASF"<<endl;
+		return true;
+	}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorP)->getCodigo();
+		
+		if (!VerificarCodUnico(temp))
+			{
+			cout<<"*************************************************"<<endl;
+			return true;
+			}
+		else
+			{
+			aux=aux->siguiente;
+			}
+		}
+	return false;
+	}
+	
+
 int main()
 	{
 	
@@ -1276,8 +1348,20 @@ int main()
 	*/
 	//ListaProveedores.MostrarProveedores();
 	
+	
+	
 	if (ListaProveedores.LeerProveedores() && ListaClientes.LeerClientes() && ListaCategorias.LeerCategorias() && ListaProductos.LeerProductos())
 		{
+			//ListaProveedores.VerificarCodUnico(4);
+		if (ListaProveedores.RevisarCod())
+			{
+			cout<<"************************ERROR************************"<<endl<<"No se aceptan codigos repetidos en los proveedores"<<endl;
+			cout<<"Revise el archivo de texto con los proveedores"<<endl<<"**Ningun codigo puede estar repetido**"<<endl;
+			
+			return 0;
+			}
+		//ListaProveedores.VerificarCodUnico(1);
+			
 		ListaProveedores.MostrarProveedores();
 		while (true)
 			{
