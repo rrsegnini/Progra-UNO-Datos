@@ -1,5 +1,5 @@
 01;Pedro;Heredia;84376405
 02;Esteban;SanJose;67893342
-07;Luis;Alajuela;88560123
-09;Laura;Alajuela;45976112
-03;Alejandro;Cartago;7894564
+03;Luis;Alajuela;88560123
+08;Laura;Alajuela;45976112
+04;Alejandro;Cartago;7885855

@@ -53,6 +53,11 @@ class ItemFactura{
 		}
 			
 		void facturar(){
+			
+			if (Descuento)
+				{
+				PrecioTotal = PrecioTotal - (PrecioTotal * 0.05);
+				}
 			string a = "||||||||||Codigo del proveedor: " +std::to_string(CodigoProveedor) +" ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string b = "||||||||||Nombre del proveedor: " +std::to_string(CodigoProveedor) + "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string c = "||||||||||Cliente: " +NombreCliente + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
@@ -1620,6 +1625,7 @@ int main()
 	int int_cant_input;
 	string cant_input;
 	int precio;
+	char yes_no;
 	
 	
 	listaDC ListaProveedores;
@@ -1628,7 +1634,8 @@ int main()
 	listaDC ListaClientes;
 
 	listaDC ListaCategorias;
-
+//	while(true){
+//	}
 	if (ListaProveedores.LeerProveedores() && ListaClientes.LeerClientes() && ListaCategorias.LeerCategorias() && ListaProductos.LeerProductos())
 		{
 			//ListaProductos.ReducirStock("Irex", 2);
@@ -1642,10 +1649,12 @@ int main()
 			
 			return 0;
 			}
-		ListaProveedores.MostrarProveedores();
+		
 		while (true)
 			{
-			cout<<"Ingrese el codigo del vendedor: "; 
+			ListaProveedores.MostrarProveedores();
+			
+			cout<<"Ingrese el codigo del proveedor: "; 
 			std::getline(std::cin,cod_input);
 			try{
 				cod_input_int = std::stoi(cod_input);
@@ -1719,8 +1728,7 @@ int main()
 					}
 				//break;
 				}
-				//cout<<"AVERQUEESTAPASANDOACA";
-				ListaProductos.ReducirStock(pro_input, int_cant_input);
+				
 				
 				cod_categoria = ListaCategorias.MostrarCodigoCategoria(cat_input);
 				precio = ListaProductos.MostrarPrecio(pro_input);
@@ -1729,6 +1737,24 @@ int main()
 										
 				Item->facturar();
 				
+				printf ("%.90s\n", "\n///////////////// ¿Desea efectuar la compra? (Y/N) \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n");
+				yes_no = cin.get();
+				
+				if (yes_no == 'Y')
+					{
+					ListaProductos.ReducirStock(pro_input, int_cant_input);	
+					}
+				cin.sync();	
+					printf ("%.90s\n", "\n///////////////// ¿Desea comprar otro producto? (Y/N) \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n");
+					char comprar_otra_vez;
+					//std::getline(std::cin,comprar_otra_vez);
+					comprar_otra_vez = cin.get();
+					
+					if (comprar_otra_vez == 'N')
+						{
+						break;
+						}
+						
 				}
 			
 				
