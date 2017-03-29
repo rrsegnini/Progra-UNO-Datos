@@ -57,7 +57,7 @@ class ItemFactura{
 			string b = "||||||||||Nombre del proveedor: " +std::to_string(CodigoProveedor) + "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string c = "||||||||||Cliente: " +NombreCliente + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string d = "|||||Codigo: " + std::to_string(CodigoCategoria) + "  Categoria: " + NombreCategoria + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
-			string e = "|||||Producto: " + NombreProducto + "  Cantidad: " + std::to_string(PrecioUnitario) + "  Precio unitario:" + std::to_string(PrecioUnitario)  + "|||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			string e = "|||||Producto: " + NombreProducto + "  Cantidad: " + std::to_string(cantidadProducto) + "  Precio unitario:" + std::to_string(PrecioUnitario)  + "|||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string f = "|||||Precio total: " + std::to_string(PrecioTotal) + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			
 			
@@ -1418,20 +1418,20 @@ void listaDC::ReducirStock(string producto, int num) //Disminuye el stock de un 
 		}
 		
 	else{
-	aux = aux->siguiente;
-	
-	while (aux != primero)
-		{
-		if ((aux->valorPp)->getNombre() == producto)
+		aux = aux->siguiente;
+		
+		while (aux != primero)
 			{
-			(aux->valorPp)->reducirStock(num);
-			}
-		else{
+			if ((aux->valorPp)->getNombre() == producto)
+				{
+				(aux->valorPp)->reducirStock(num);
+				}
 			aux = aux->siguiente;
 			}
 		}
-		}
 	}
+	
+	
 
 int listaDC::MostrarStock(string producto) //Muestra el stock de un producto
 	{
@@ -1631,7 +1631,7 @@ int main()
 
 	if (ListaProveedores.LeerProveedores() && ListaClientes.LeerClientes() && ListaCategorias.LeerCategorias() && ListaProductos.LeerProductos())
 		{
-			
+			//ListaProductos.ReducirStock("Irex", 2);
 			//ListaCategorias.MostrarCategoria(2);
 			//ListaProductos.MostrarProductos("Carnes", ListaCategorias);
 			
@@ -1714,19 +1714,20 @@ int main()
 										break;
 										}
 									}
+								break;
 						}
 					}
 				//break;
 				}
-				cout<<"AVERQUEESTAPASANDOACA";
+				//cout<<"AVERQUEESTAPASANDOACA";
 				ListaProductos.ReducirStock(pro_input, int_cant_input);
 				
-										cod_categoria = ListaCategorias.MostrarCodigoCategoria(cat_input);
-										precio = ListaProductos.MostrarPrecio(pro_input);
+				cod_categoria = ListaCategorias.MostrarCodigoCategoria(cat_input);
+				precio = ListaProductos.MostrarPrecio(pro_input);
 										
-										ItemFactura* Item = new ItemFactura(cod_input_int, nom_input, Desc,cod_categoria, cat_input, int_cant_input, pro_input, precio, precio*int_cant_input);
+				ItemFactura* Item = new ItemFactura(cod_input_int, nom_input, Desc,cod_categoria, cat_input, int_cant_input, pro_input, precio, precio*int_cant_input);
 										
-										Item->facturar();
+				Item->facturar();
 				
 				}
 			
