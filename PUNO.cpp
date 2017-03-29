@@ -53,7 +53,7 @@ class ItemFactura{
 		}
 			
 		void facturar(){
-			string a = "|||||||||Codigo del proveedor: " +std::to_string(CodigoProveedor) +" ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
+			string a = "||||||||||Codigo del proveedor: " +std::to_string(CodigoProveedor) +" ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string b = "||||||||||Nombre del proveedor: " +std::to_string(CodigoProveedor) + "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string c = "||||||||||Cliente: " +NombreCliente + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
 			string d = "|||||Codigo: " + std::to_string(CodigoCategoria) + "  Categoria: " + NombreCategoria + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||";
@@ -222,8 +222,12 @@ class Producto{
 		}
 		
 		int getCantidadStock(){
-			cout<<CantidadStock<<endl;
+			//cout<<CantidadStock<<endl;
 			return CantidadStock;
+		}
+		
+		void reducirStock(int num){
+			CantidadStock = CantidadStock - num;
 		}
 		
 		void toString(){
@@ -285,6 +289,8 @@ class Cliente{
 			cout<<Telefono_c<<endl;
 			return Telefono_c;
 		}
+		
+		
 		
 	private:
 		int Cedula;
@@ -450,7 +456,7 @@ class listaDC {
     
     bool VerificarProveedor(int cod);
     bool VerificarCliente(string nom);
-    void MostrarProductos(string cat, listaDC&  Cats);
+    bool MostrarProductos(string cat, listaDC&  Cats);
     string MostrarCategoria(int cod);
     void MostrarProveedores();
     void MostrarClientes();
@@ -459,6 +465,10 @@ class listaDC {
     bool RevisarCod();
     int MostrarCodigoCategoria(string cat);
     int MostrarPrecio(string producto);
+    int MostrarStock(string producto);
+    bool VerificarCategoria(string cat);
+    void ReducirStock(string producto, int num);
+    bool VerificarProducto(string prod);
     
    private:
     pnodo primero;
@@ -1257,6 +1267,34 @@ bool listaDC::VerificarProveedor(int cod)
 	return false;
 	}
 	
+bool listaDC::VerificarProducto(string prod) //Verifica que el producto exista
+	{
+	pnodo aux = primero;
+	string temp;
+	
+	if ((aux->valorPp)->getNombre() == prod)
+		{
+		return true;
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorPp)->getNombre();
+		
+		if (temp == prod)
+			{
+			printf ("%.90s\n", "\n||||||||||||||||| Producto aceptado ||||||||||||||||||||||||||||||||");
+			return true;
+			}
+		else
+			{
+			aux=aux->siguiente;
+			}
+		}
+	cout<<"************************ ¡Producto invalido! ************************\n"<<endl;
+	return false;
+	}
 	
 bool listaDC::VerificarCliente(string nom)
 	{
@@ -1287,6 +1325,37 @@ bool listaDC::VerificarCliente(string nom)
 	return false;
 	}
 
+bool listaDC::VerificarCategoria(string cat)
+	{
+	pnodo aux = primero;
+	string temp;
+	
+	if ((aux->valorC)->getDescripcion() == cat)
+		{
+		return true;
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorC)->getDescripcion();
+		
+		if (temp == cat)
+			{                   
+			printf ("%.90s\n", "\n||||||||||||||||||||||||||||||||||||||| Categoria valida |||||||||||||||||||||||||||||||||||||||||||||");
+			//cout<<"|||||Categoria valida|||||"<<endl;
+			return true;
+			}
+		else
+			{
+			aux=aux->siguiente;
+			}
+		}
+	printf ("%.90s\n", "\n************************************** Categoria incorrecta ***********************************************");
+	//cout<<"Categoria invalida\n"<<endl;
+	return false;
+	}
+
 
 string listaDC::MostrarCategoria(int cod) //Muestra la categoria segun el codigo de la misma
 	{
@@ -1314,7 +1383,7 @@ string listaDC::MostrarCategoria(int cod) //Muestra la categoria segun el codigo
 	}
 
 
-int listaDC::MostrarPrecio(string producto) //Muestra el precio de un producti
+int listaDC::MostrarPrecio(string producto) //Muestra el precio de un producto
 	{
 	pnodo aux = primero;
 	
@@ -1332,6 +1401,57 @@ int listaDC::MostrarPrecio(string producto) //Muestra el precio de un producti
 		if ((aux->valorPp)->getNombre() == producto)
 			{
 			return (aux->valorPp)->getPrecioUnit();
+			}
+		aux = aux->siguiente;
+		}
+
+	return 0;
+	}
+	
+void listaDC::ReducirStock(string producto, int num) //Disminuye el stock de un producto
+	{
+	pnodo aux = primero;
+	
+	if ((aux->valorPp)->getNombre() == producto)
+		{
+		(aux->valorPp)->reducirStock(num);
+		}
+		
+	else{
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		if ((aux->valorPp)->getNombre() == producto)
+			{
+			(aux->valorPp)->reducirStock(num);
+			}
+		else{
+			aux = aux->siguiente;
+			}
+		}
+		}
+	}
+
+int listaDC::MostrarStock(string producto) //Muestra el stock de un producto
+	{
+	pnodo aux = primero;
+	
+	if ((aux->valorPp)->getNombre() == producto)
+		{
+			
+		cout<<(aux->valorPp)->getCantidadStock();
+		return (aux->valorPp)->getCantidadStock();
+
+		}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		if ((aux->valorPp)->getNombre() == producto)
+			{
+				cout<<(aux->valorPp)->getCantidadStock();
+			return (aux->valorPp)->getCantidadStock();
 			}
 		aux = aux->siguiente;
 		}
@@ -1367,13 +1487,14 @@ int listaDC::MostrarCodigoCategoria(string cat) //Retorna la el codigo de una ca
 	return 0;
 	}
 
-void listaDC::MostrarProductos(string cat, listaDC&  Cats) //Muestra todos los productos de una categoria en especifico
+bool listaDC::MostrarProductos(string cat, listaDC&  Cats) //Muestra todos los productos de una categoria en especifico
 	{
 	pnodo aux = primero;
 	int cont = 1;
+	int cont2 = 0;
 	string temp = Cats.MostrarCategoria((aux->valorPp)->getCodCategoria());
 
-	
+
 	if (temp == cat)
 		{
 		cout<<cont<<". ";
@@ -1383,15 +1504,22 @@ void listaDC::MostrarProductos(string cat, listaDC&  Cats) //Muestra todos los p
 	aux = aux->siguiente;
 	while (aux != primero)
 		{
+			
 		temp = Cats.MostrarCategoria((aux->valorPp)->getCodCategoria());
 		if (temp == cat)
 			{
 			cout<<cont<<". "<<(aux->valorPp)->getNombre()<<endl;
 			cont++;
+			cont2++;
 			}
 		aux = aux->siguiente;		
 		}
-
+	if (cont2 == 0)
+		{
+		printf ("%.90s\n", "\n******************* No hay productos disponibles en esta categeoria *************************************************");
+		return false;
+		}
+	return true;	
 	}
 
 void listaDC::MostrarProveedores() //Muestra en pantalla los proveedores
@@ -1504,7 +1632,7 @@ int main()
 	if (ListaProveedores.LeerProveedores() && ListaClientes.LeerClientes() && ListaCategorias.LeerCategorias() && ListaProductos.LeerProductos())
 		{
 			
-			ListaCategorias.MostrarCategoria(2);
+			//ListaCategorias.MostrarCategoria(2);
 			//ListaProductos.MostrarProductos("Carnes", ListaCategorias);
 			
 		if (ListaProveedores.RevisarCod())
@@ -1524,8 +1652,7 @@ int main()
 			}
 			catch (std::exception& e) {
     			std::cerr << "******************ERROR******************\n";
-    			return 0;
-    			//std::terminate();
+    			//return 0;
  				}
 			
 	
@@ -1545,33 +1672,61 @@ int main()
 				cout<<"------------------------ Categorias de productos disponibles: ------------------------"<<endl;
 				ListaCategorias.MostrarTodasCategorias();
 				
+				while (true){
+				
 				cout<<"\nIngrese el nombre de la categoria: ";
 				std::getline(std::cin,cat_input);
 				
-				cout<<"------------------------  Productos disponibles en esta categoria: ------------------------"<<endl;
-				ListaProductos.MostrarProductos(cat_input, ListaCategorias);
-				
-				cout<<"\nIngrese el nombre del producto: ";
-				std::getline(std::cin,pro_input);
-				
-				cout<<"\nIngrese el cantidad que desea comprar: ";
-				std::getline(std::cin,cant_input);
-				
-				try{
-					int_cant_input = std::stoi(cant_input);
+				if (ListaCategorias.VerificarCategoria(cat_input)){
+					cout<<"------------------------  Productos disponibles en esta categoria: ------------------------"<<endl;//CORRER ESTO PARA ARRIBA
+					if (ListaProductos.MostrarProductos(cat_input, ListaCategorias))
+						{
+						
+						while (true){
+									cout<<"\nIngrese el nombre del producto: ";
+									std::getline(std::cin,pro_input);
+									
+									if (ListaProductos.VerificarProducto(pro_input))
+										{
+										break;
+										}
+									}
+						
+						
+						while (true){
+									cout<<"\nIngrese el cantidad que desea comprar: ";
+									std::getline(std::cin,cant_input);
+									
+									try{
+										int_cant_input = std::stoi(cant_input);
+										}
+									catch (std::exception& e) {
+					    				std::cerr << "******************ERROR******************\n";
+					    				//return 0;
+					 					}
+					 				
+									 
+					 				if (ListaProductos.MostrarStock(pro_input)<int_cant_input){
+										cout<<endl<<"******************No hay tantas unidades en stock******************"<<endl;
+										
+										}
+									else{
+										break;
+										}
+									}
+						}
 					}
-				catch (std::exception& e) {
-    				std::cerr << "******************ERROR******************\n";
-    				return 0;
- 					}
-				cod_categoria = ListaCategorias.MostrarCodigoCategoria(cat_input);
-				precio = ListaProductos.MostrarPrecio(pro_input);
+				//break;
+				}
+				cout<<"AVERQUEESTAPASANDOACA";
+				ListaProductos.ReducirStock(pro_input, int_cant_input);
 				
-				ItemFactura* Item = new ItemFactura(cod_input_int, nom_input, Desc,cod_categoria, cat_input, int_cant_input, pro_input, precio, precio*int_cant_input);
-				
-				//cout<<"|||||||||||||||||||||  Resumen de compra |||||||||||||||||||||"<<endl;
-				
-				Item->facturar();
+										cod_categoria = ListaCategorias.MostrarCodigoCategoria(cat_input);
+										precio = ListaProductos.MostrarPrecio(pro_input);
+										
+										ItemFactura* Item = new ItemFactura(cod_input_int, nom_input, Desc,cod_categoria, cat_input, int_cant_input, pro_input, precio, precio*int_cant_input);
+										
+										Item->facturar();
 				
 				}
 			
