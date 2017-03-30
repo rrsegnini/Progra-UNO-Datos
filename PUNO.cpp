@@ -54,6 +54,23 @@ class ItemFactura{
 		string getCategoria(){
 			return NombreCategoria;
 		}
+		int getCodCategoria(){
+			return CodigoCategoria;
+		}
+		int getCantidadProducto(){
+			return cantidadProducto;
+		}
+		
+		string getNombreProducto(){
+			return NombreProducto;
+		}
+		
+		int getPrecioTotal(){
+			return PrecioTotal;
+		}
+		int getPrecioUnitario(){
+			return PrecioUnitario;
+		}
 			
 		void facturar(){
 			
@@ -92,6 +109,8 @@ class ItemFactura{
 			
 		}
 		
+	
+		
 		
 	private:
 		int CodigoProveedor;
@@ -119,6 +138,7 @@ class Proveedor{
 		Nombre = "Nulo";
 		Direccion = "Nulo";
 		Telefono = 0;
+		cont=0;
 		}
 		
 		Proveedor(int _code, string _name, string _direccion, int _tel)
@@ -148,13 +168,22 @@ class Proveedor{
 			cout<<Telefono<<endl;
 			return Telefono;
 		}
-		//int LeerProveedores();
+		
+		int getCont(){
+			return cont;
+		}
+		
+		void sumarCont(){
+			cont++;
+			cout<<"El contadorcito"<<cont;
+		}
 		
 	private:
 		int Codigo;
 		string Nombre;
 		string Direccion;
 		int Telefono;
+		int cont=0;
 		
 		
 };
@@ -183,9 +212,18 @@ class Categoria{
 			return Descripcion;
 		}
 		
+		int getCont(){
+			return cont;
+		}
+		
+		void sumarCont(){
+			cont++;
+		}
+		
 	private:
 		int Codigo;
 		string Descripcion;
+		int cont=0;
 };
 
 
@@ -238,13 +276,12 @@ class Producto{
 			CantidadStock = CantidadStock - num;
 		}
 		
-		void toString(){
-			cout<<"ESTE ES EL toSTRING "<<endl;
-			cout<<CodProducto<<" ";
-			cout<<CodCategoria<<" ";
-			cout<<Nombre<<" ";
-			cout<<PrecioUnit<<" ";
-			cout<<CantidadStock<<endl;
+		int getCont(){
+			return cont;
+		}
+		
+		void sumarCont(int n){
+			cont = cont+n;
 		}
 	
 	
@@ -254,6 +291,7 @@ class Producto{
 		string Nombre;
 		float PrecioUnit;
 		int CantidadStock;
+		int cont=0;
 };
 
 
@@ -298,6 +336,14 @@ class Cliente{
 			return Telefono_c;
 		}
 		
+		int getCont(){
+			return cont;
+		}
+		
+		void sumarCont(){
+			cont++;
+		}
+		
 		
 		
 	private:
@@ -305,6 +351,7 @@ class Cliente{
 		string Nombre_c;
 		string Direccion_c;
 		int Telefono_c;
+		int cont=0;
 		
 		
 };
@@ -410,6 +457,22 @@ class nodo {
 	    }
 		//Fin Constructor Cliente
 		
+		//Constructor Cliente
+		nodo(ItemFactura* v)
+			{
+	    	valorF = v;
+	    	siguiente = NULL;
+	    	anterior =NULL;
+	    	}
+		
+	   nodo(ItemFactura* v, nodo * signodo)
+	    {
+	    	
+	       valorF = v;
+	       siguiente = signodo;
+	    }
+		//Fin Constructor Cliente
+		
 		
  private:
     int valor;
@@ -417,6 +480,7 @@ class nodo {
     Categoria* valorC;
     Producto* valorPp;
     Cliente* valorCl;
+    ItemFactura* valorF;
     
     nodo *siguiente;
     nodo *anterior;
@@ -461,6 +525,7 @@ class listaDC {
     bool LeerProductos();
     void InsertarInicio(Cliente* v);
     bool LeerClientes();
+    void InsertarInicio(ItemFactura* v);
     
     bool VerificarProveedor(int cod);
     bool VerificarCliente(string nom);
@@ -479,6 +544,11 @@ class listaDC {
     bool VerificarProducto(string prod);
     bool RevisarCodCategoria();
 	bool VerificarCodUnicoCategoria(int cod);
+	void ImprimirFactura();
+	string ProveedorMayoresVentas();
+	string CategoriaMayoresVentas();
+	string ProductoMayoresVentas();
+	string ClienteMayoresVentas();
     
    private:
     pnodo primero;
@@ -557,6 +627,31 @@ void listaDC::InsertarInicio(Proveedor* v)
    }
 }
 //Fin Insertar para Proveedor
+
+
+
+//Insertar para ItemFactura
+void listaDC::InsertarInicio(ItemFactura* v)
+{
+  
+   if (ListaVacia())
+   {
+     primero = new nodo(v);
+     primero->anterior=primero;
+     primero->siguiente=primero;
+   }  
+   else
+   {
+     pnodo nuevo=new nodo (v);
+     nuevo->siguiente=primero;
+     nuevo->anterior= primero->anterior;
+     primero->anterior->siguiente=nuevo;
+     nuevo->siguiente->anterior=nuevo;
+     primero= nuevo;
+   }
+}
+//Fin Insertar para Proveedor
+
 
 
 
@@ -1248,13 +1343,14 @@ bool listaDC:: VerificarCodUnico(int cod)
 	}
 
 
-bool listaDC::VerificarProveedor(int cod)
+bool listaDC::VerificarProveedor(int cod) //Verifica que el proveedor exista
 	{
 	pnodo aux = primero;
 	int temp;
 	
 	if ((aux->valorP)->getCodigo() == cod)
 		{
+			(aux->valorP)->sumarCont();
 		return true;
 		}
 	aux = aux->siguiente;
@@ -1266,6 +1362,7 @@ bool listaDC::VerificarProveedor(int cod)
 		if (temp == cod)
 			{
 			cout<<"************************ Codigo aceptado ************************"<<endl;
+			(aux->valorP)->sumarCont();
 			return true;
 			}
 		else
@@ -1313,6 +1410,7 @@ bool listaDC::VerificarCliente(string nom)
 	
 	if ((aux->valorCl)->getNombre() == nom)
 		{
+		(aux->valorCl)->sumarCont();
 		return true;
 		}
 	aux = aux->siguiente;
@@ -1324,6 +1422,7 @@ bool listaDC::VerificarCliente(string nom)
 		if (temp == nom)
 			{
 			cout<<"|||||Se aplica un descuento del 5% por ser cliente frecuente|||||"<<endl;
+			(aux->valorCl)->sumarCont();
 			return true;
 			}
 		else
@@ -1331,7 +1430,7 @@ bool listaDC::VerificarCliente(string nom)
 			aux=aux->siguiente;
 			}
 		}
-	cout<<"Cliente inválido\n"<<endl;
+	cout<<"Cliente nuevo\n"<<endl;
 	return false;
 	}
 
@@ -1342,6 +1441,7 @@ bool listaDC::VerificarCategoria(string cat)
 	
 	if ((aux->valorC)->getDescripcion() == cat)
 		{
+		(aux->valorC)->sumarCont();
 		return true;
 		}
 	aux = aux->siguiente;
@@ -1353,7 +1453,7 @@ bool listaDC::VerificarCategoria(string cat)
 		if (temp == cat)
 			{                   
 			printf ("%.90s\n", "\n||||||||||||||||||||||||||||||||||||||| Categoria valida |||||||||||||||||||||||||||||||||||||||||||||");
-			//cout<<"|||||Categoria valida|||||"<<endl;
+			(aux->valorC)->sumarCont();
 			return true;
 			}
 		else
@@ -1424,6 +1524,7 @@ void listaDC::ReducirStock(string producto, int num) //Disminuye el stock de un 
 	
 	if ((aux->valorPp)->getNombre() == producto)
 		{
+		(aux->valorPp)->sumarCont(num);
 		(aux->valorPp)->reducirStock(num);
 		}
 		
@@ -1434,6 +1535,7 @@ void listaDC::ReducirStock(string producto, int num) //Disminuye el stock de un 
 			{
 			if ((aux->valorPp)->getNombre() == producto)
 				{
+				(aux->valorPp)->sumarCont(num);
 				(aux->valorPp)->reducirStock(num);
 				}
 			aux = aux->siguiente;
@@ -1682,7 +1784,154 @@ bool listaDC::RevisarCodCategoria() //RETORNA TRUE SI HAY ALGUN CODIGO REPETIDO 
 		}
 	return false;
 	}
+
+
+string listaDC::ProveedorMayoresVentas(){ //BUSCA EL PROVEEDOR CON MAS VENTAS
+	pnodo aux = primero;
+	pnodo temp = aux;
+	do {
+  		if ((temp->valorP)->getCont() <(aux->valorP)->getCont()) 
+			{
+			temp = aux;
+			aux = aux->siguiente;
+			}
+		else{
+			aux= aux->siguiente;
+			
+		}
+		} while (aux != primero);
+	cout<<(temp->valorP)->getNombre()<<endl;;
+	return (temp->valorP)->getNombre();
+	}
+	
+string listaDC::CategoriaMayoresVentas(){ //BUSCA LA CATEGORIA CON MAS VENTAS
+	pnodo aux = primero;
+	pnodo temp = aux;
+	do {
+  		if ((temp->valorC)->getCont() <(aux->valorC)->getCont()) 
+			{
+			temp = aux;
+			aux = aux->siguiente;
+			}
+		else{
+			aux= aux->siguiente;
+			
+		}
+		} while (aux != primero);
+	cout<<(temp->valorC)->getDescripcion()<<endl;;
+	return (temp->valorC)->getDescripcion();
+	}
+
+string listaDC::ProductoMayoresVentas(){ //BUSCA EL PRODUCTO CON MAS VENTAS
+	pnodo aux = primero;
+	pnodo temp = aux;
+	do {
+  		if ((temp->valorPp)->getCont() <(aux->valorPp)->getCont()) 
+			{
+			temp = aux;
+			aux = aux->siguiente;
+			}
+		else{
+			aux= aux->siguiente;
+			
+		}
+		} while (aux != primero);
+	cout<<(temp->valorPp)->getNombre()<<endl;;
+	return (temp->valorPp)->getNombre();
+	}
+	
+string listaDC::ClienteMayoresVentas(){ //BUSCA EL PROVEEDOR CON MAS VENTAS
+	pnodo aux = primero;
+	pnodo temp = aux;
+	do {
+  		if ((temp->valorCl)->getCont() <(aux->valorCl)->getCont()) 
+			{
+			temp = aux;
+			aux = aux->siguiente;
+			}
+		else{
+			aux= aux->siguiente;
+			
+		}
+		} while (aux != primero);
+	cout<<(temp->valorCl)->getNombre()<<endl;;
+	return (temp->valorCl)->getNombre();
+	}
+
 		
+
+void listaDC::ImprimirFactura(){
+	pnodo aux = primero;
+	
+	cout<<"Imprimiendo factura..."<<endl;
+		
+	ofstream myfile;
+	myfile.open ("Factura.txt");
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "Codigo del proveedor: " <<(aux->valorF)->getCodigoP() <<endl;
+	myfile << "Nombre del proveedor: " <<endl;
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "Cliente: " << (aux->valorF)->getNombreCliente() << endl;
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "Codigo                      Producto                   Cantidad"<<endl;
+	myfile << (aux->valorF)->getCodCategoria() << "                             "<< (aux->valorF)->getNombreProducto() 
+															<< "                          " << (aux->valorF)->getCantidadProducto()<< endl;
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "Precio por unidad: " << (aux->valorF)->getPrecioUnitario() << endl;
+		/*
+		if (Desc){
+			myfile << "Precio total: " << precio*int_cant_input - (precio*int_cant_input*0.05)<<endl;
+			
+		}
+		else{*/
+	myfile << "Precio total: " << (aux->valorF)->getPrecioTotal() <<endl;
+		//}
+		
+		
+		
+	//	myfile.close();
+		
+		cout<<"Factura lista"<<endl;
+	
+	aux = aux->siguiente;
+	
+	while (aux != primero){
+	//	ofstream myfile;
+	//	myfile.open ("Factura.txt");
+		myfile << "\n\n---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Codigo del proveedor: " <<(aux->valorF)->getCodigoP() <<endl;
+		myfile << "Nombre del proveedor: " <<endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Cliente: " << (aux->valorF)->getNombreCliente() << endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Codigo                      Producto                   Cantidad"<<endl;
+		myfile << (aux->valorF)->getCodCategoria() << "                             "<< (aux->valorF)->getNombreProducto() 
+															<< "                                 " << (aux->valorF)->getCantidadProducto()<< endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Precio por unidad: " << (aux->valorF)->getPrecioUnitario() << endl;
+		/*
+		if (Desc){
+			myfile << "Precio total: " << precio*int_cant_input - (precio*int_cant_input*0.05)<<endl;
+			
+		}
+		else{*/
+			myfile << "Precio total: " << (aux->valorF)->getPrecioTotal() <<endl;
+		//	myfile.close();
+		aux = aux->siguiente;
+		}
+		
+		
+		//ofstream myfile;
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "---------------------------------------------------------------\n";
+	myfile << "------------------- Gracias por preferirnos :) ----------------\n";
+	myfile.close();	
+		}
+
 
 int main()
 	{
@@ -1705,20 +1954,16 @@ int main()
 	int precio;
 	char yes_no;
 	
-	
+	listaDC Items;
 	listaDC ListaProveedores;
 
 	listaDC ListaProductos;
 	listaDC ListaClientes;
 
 	listaDC ListaCategorias;
-//	while(true){
-//	}
+
 	if (ListaProveedores.LeerProveedores() && ListaClientes.LeerClientes() && ListaCategorias.LeerCategorias() && ListaProductos.LeerProductos())
 		{
-			//ListaProductos.ReducirStock("Irex", 2);
-			//ListaCategorias.MostrarCategoria(2);
-			//ListaProductos.MostrarProductos("Carnes", ListaCategorias);
 			
 		if (ListaProveedores.RevisarCod())
 			{
@@ -1824,6 +2069,8 @@ int main()
 				
 				if (yes_no == 'Y')
 					{
+					Items.InsertarInicio(Item);
+					
 					ListaProductos.ReducirStock(pro_input, int_cant_input);	
 					}
 				cin.sync();	
@@ -1845,39 +2092,23 @@ int main()
 			cod_input="";
 			}
 		
-		cout<<"Imprimiendo factura..."<<endl;
+		cout<<"||||||||||||||||||||||||||||||||||| Resumen del dia ||||||||||||||||||||||||||||||||||||||"<<endl;
+		cout<<"Proveedor que mas vendio: ";
+		ListaProveedores.ProveedorMayoresVentas();
 		
-		ofstream myfile;
-		myfile.open ("Factura.txt");
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "Codigo del proveedor: " <<cod_input_int <<endl;
-		myfile << "Nombre del proveedor: "<<endl;
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "Cliente: " << nom_input << endl;
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "Codigo                      Producto                   Cantidad"<<endl;
-		myfile << cod_categoria << "                             "<< pro_input << "                                  " << int_cant_input<< endl;
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "Precio por unidad: " << precio << endl;
+		cout<<"Categoria mas vendida: ";
+		ListaCategorias.CategoriaMayoresVentas();
 		
-		if (Desc){
-			myfile << "Precio total: " << precio*int_cant_input - (precio*int_cant_input*0.05)<<endl;
-			
-		}
-		else{
-			myfile << "Precio total: " << precio*int_cant_input <<endl;
-		}
+		cout<<"Producto mas vendido: ";
+		ListaProductos.ProductoMayoresVentas();
 		
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "---------------------------------------------------------------\n";
-		myfile << "------------------- Gracias por preferirnos :) ----------------\n";
+		cout<<"Cliente que mas compro: ";
+		ListaClientes.ClienteMayoresVentas();
 		
-		myfile.close();
+		cout<<endl;
 		
-		cout<<"Factura lista"<<endl;
-		return 0;
+		
+		Items.ImprimirFactura();
 		}
 	else{
 		return 0;
