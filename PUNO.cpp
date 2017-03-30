@@ -5,6 +5,9 @@
 #include <cstdlib>
 #include <exception>
 #include <cstdlib>
+
+
+
 using namespace std;
 
 
@@ -466,7 +469,7 @@ class listaDC {
     void MostrarProveedores();
     void MostrarClientes();
     void MostrarTodasCategorias();
-    bool VerificarCodUnico(int num);
+    bool VerificarCodUnico(int cod);
     bool RevisarCod();
     int MostrarCodigoCategoria(string cat);
     int MostrarPrecio(string producto);
@@ -474,6 +477,8 @@ class listaDC {
     bool VerificarCategoria(string cat);
     void ReducirStock(string producto, int num);
     bool VerificarProducto(string prod);
+    bool RevisarCodCategoria();
+	bool VerificarCodUnicoCategoria(int cod);
     
    private:
     pnodo primero;
@@ -1210,7 +1215,7 @@ bool listaDC:: VerificarCodUnico(int cod)
 	
 	if ((aux->valorP)->getCodigo() == cod && cont == 2)
 		{
-		cout<<"************ERROR************"<<endl<<"NO SE ACEPTAN CODIGOS REPETIDOS"<<endl;
+		cout<<"**********************************************ERROR***************************************"<<endl<<"                              NO SE ACEPTAN CODIGOS REPETIDOS EN LOS PROVEEDORES"<<endl;
 		return false;
 		}
 	else{
@@ -1227,7 +1232,7 @@ bool listaDC:: VerificarCodUnico(int cod)
 		
 		if (temp == cod && cont==2)
 			{
-			cout<<"************ERROR************"<<endl<<"NO SE ACEPTAN CODIGOS REPETIDOS"<<endl;
+			cout<<"**********************************************ERROR***************************************"<<endl<<"                           NO SE ACEPTAN CODIGOS REPETIDOS EN LOS PROVEEDORES"<<endl;
 			return false;
 			}
 		else
@@ -1598,7 +1603,7 @@ bool listaDC::RevisarCod() //RETORNA TRUE SI HAY ALGUN CODIGO REPETIDO
 		
 		if (!VerificarCodUnico(temp))
 			{
-			cout<<"*************************************************"<<endl;
+			cout<<"******************************************************************************************"<<endl;
 			return true;
 			}
 		else
@@ -1608,11 +1613,84 @@ bool listaDC::RevisarCod() //RETORNA TRUE SI HAY ALGUN CODIGO REPETIDO
 		}
 	return false;
 	}
+
+bool listaDC:: VerificarCodUnicoCategoria(int cod) //REVISA QUE LOS CODIGOS DE LAS CATEGORIAS SEAN UNICOS
+	{
+	int cont = 1;
+	pnodo aux = primero;
+	int temp;
 	
+	if ((aux->valorC)->getCodigo() == cod && cont == 2)
+		{
+		cout<<"******************************************ERROR*********************************************"<<endl<<"                        NO SE ACEPTAN CODIGOS REPETIDOS EN LAS CATEGORIAS"<<endl;
+		return false;
+		}
+	else{
+		if ((aux->valorC)->getCodigo() == cod)
+			{
+			cont++;
+			}
+	}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorC)->getCodigo();
+		
+		if (temp == cod && cont==2)
+			{
+			cout<<"****************************************ERROR*********************************************"<<endl<<"                    NO SE ACEPTAN CODIGOS REPETIDOS EN LAS CATEGORIAS"<<endl;
+			return false;
+			}
+		else
+			{
+			if (temp == cod){
+				cont++;
+			}
+			
+			}
+		aux=aux->siguiente;
+		}
+	return true;
+	}
+	
+bool listaDC::RevisarCodCategoria() //RETORNA TRUE SI HAY ALGUN CODIGO REPETIDO EN LAS CATEGORIAS
+	{
+	pnodo aux = primero;
+	int temp;
+	
+	temp = (aux->valorC)->getCodigo();
+
+	if (!VerificarCodUnicoCategoria(4)){
+		return true;
+	}
+	aux = aux->siguiente;
+	
+	while (aux != primero)
+		{
+		temp = (aux->valorC)->getCodigo();
+		
+		if (!VerificarCodUnicoCategoria(temp))
+			{
+			cout<<"******************************************************************************************"<<endl;
+			return true;
+			}
+		else
+			{
+			aux=aux->siguiente;
+			}
+		}
+	return false;
+	}
+		
 
 int main()
 	{
-	
+
+	printf ("%.90s\n", "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","||||||||||||||||||||||||||||||||Bienvenido al sistema|||||||||||||||||||||||||||||||||||||||");
+			printf ("%.90s\n","|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
 	
 	string cod_input;
 	
@@ -1650,6 +1728,10 @@ int main()
 			return 0;
 			}
 		
+		if (ListaCategorias.RevisarCodCategoria()){
+			cout<<"Error"<<endl;
+			return 0;
+		}
 		while (true)
 			{
 			ListaProveedores.MostrarProveedores();
@@ -1763,7 +1845,38 @@ int main()
 			cod_input="";
 			}
 		
-	
+		cout<<"Imprimiendo factura..."<<endl;
+		
+		ofstream myfile;
+		myfile.open ("Factura.txt");
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Codigo del proveedor: " <<cod_input_int <<endl;
+		myfile << "Nombre del proveedor: "<<endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Cliente: " << nom_input << endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Codigo                      Producto                   Cantidad"<<endl;
+		myfile << cod_categoria << "                             "<< pro_input << "                                  " << int_cant_input<< endl;
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "Precio por unidad: " << precio << endl;
+		
+		if (Desc){
+			myfile << "Precio total: " << precio*int_cant_input - (precio*int_cant_input*0.05)<<endl;
+			
+		}
+		else{
+			myfile << "Precio total: " << precio*int_cant_input <<endl;
+		}
+		
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "---------------------------------------------------------------\n";
+		myfile << "------------------- Gracias por preferirnos :) ----------------\n";
+		
+		myfile.close();
+		
+		cout<<"Factura lista"<<endl;
 		return 0;
 		}
 	else{
